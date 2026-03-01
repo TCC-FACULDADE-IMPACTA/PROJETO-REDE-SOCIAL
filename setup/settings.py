@@ -1,3 +1,5 @@
+#Configurações do PostgreSQL, JWT e Bcrypt
+
 """
 Django settings for setup project.
 
@@ -72,10 +74,15 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+#BANCO DE DADOS
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'rede_social',
+        'USER': 'postgres',
+        'PASSWORD': '58462360',
+        'HOST': 'localhost', # ou o IP do servidor
+        'PORT': '5432',
     }
 }
 
@@ -98,6 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Forçando o uso do Bcrypt
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

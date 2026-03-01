@@ -1,0 +1,1 @@
+#Registro dos modelos para o Django Admin
