@@ -5,11 +5,6 @@
 
 > A plataforma social focada em compartilhar como você está se sentindo.
 
-![GitHub license](https://img.shields.io)
-![GitHub Repo stars](https://img.shields.io/github/stars/:user/:repo)
-![GitHub stars](https://img.shields.io)
-![GitHub issues](https://img.shields.io)
-
 ---
 
 ## 📌 Tabela de Conteúdos
@@ -48,9 +43,7 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 A rede social foi construída com o seguinte stack tecnológico:
 
 **Front-end:**
-*   React.js / Next.js / React Native
-*   Redux / Context API - Gerenciamento de Estado
-*   Tailwind CSS / Styled Components - Estilização
+* A DEFINIR
 
 **Back-end:**
 *   Python / Django
@@ -71,7 +64,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 Antes de começar, você precisará ter instalado em sua máquina:
 *   [Python (3.16+)](https://www.python.org)
 *   [Docker](https://www.docker.com)
-*   [Gerenciador de pacotes npm ou yarn]
+*   [PostGreSQL (18.3+)](https://www.postgresql.org)
 
 ---
 
@@ -87,31 +80,42 @@ Antes de começar, você precisará ter instalado em sua máquina:
     cd PROJETO-REDE-SOCIAL
 
     ```
-
-3.  **Instale as dependências (Front e Back):**
-    ```bash
-    npm install
-    # ou
-    yarn install
-    ```
-
-4.  **Configure as variáveis de ambiente (.env):**
+3.  **Configure as variáveis de ambiente (.env):**
     *   Crie um arquivo `.env` na raiz do backend baseado no `.env.example`.
+
+4.  **Instale as dependências:**
+   
+    ```bash
+    pip install -r requirements.txt 
+    ```
 
 5.  **Suba o banco de dados com Docker:**
     ```bash
     docker-compose up -d
     ```
-
-6.  **Inicie a aplicação:**
+6.  **Migrar o Banco de Dados::**
     ```bash
-    npm start
-    # ou
-    yarn start
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
+7.  **Criar Administrador (Django Admin):**
+    ```bash
+    python manage.py createsuperuser
     ```
 
-7.  Acesse `http://localhost:3000` no seu navegador.
+8.  **Rodar o Servidor:**
+    ```bash
+    python manage.py runserver
+    ```
 
+9.  Acesse as seguintes Rotas
+    ```
+    | Método |     Endpoint      |                    Descrição                   |
+    | -------| ----------------- | -----------------------------------------------|
+    |  POST  |  /api/cadastrar/  | Cria um novo usuário e sua credencial vinculada|
+    |  POST  |   /api/login/     | Autentica e retorna um Token JWT.              |
+    |  GET   |   /admin/         | Painel de controle administrativo do Django.   |
+    ```
 ---
 
 ## 6.📊 Estrutura do Banco de Dados
@@ -123,8 +127,20 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 *   **Likes/Comments:** ID, PostID, UserID, Conteúdo.
 
 ---
+## 7.📂 Estrutura de Pastas
+```
+├── PROGETO-REDE-SOCIAL/  # Configurações do Django
+├── api_usuarios/         # App principal (Lógica do sistema)
+│   ├── migrations/       # Histórico do banco de dados
+│   ├── models.py         # Definição das tabelas (DER)
+│   ├── views.py          # Regras de negócio (Fluxograma)
+│   └── urls.py           # Rotas da API
+├── manage.py             # CLI do Django
+└── requirements.txt      # Bibliotecas necessárias
+````
+---
 
-## 7.🤝 Como Contribuir
+## 8.🤝 Como Contribuir
 Contribuições são o que tornam a comunidade open-source um lugar incrível!
 
 1.  Faça o Fork do projeto.
@@ -135,9 +151,10 @@ Contribuições são o que tornam a comunidade open-source um lugar incrível!
 
 ---
 
-## 8.📜 Licença
+## 9.📜 Licença
 Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informações.
 
 ---
-Desenvolvido por [Seu Nome/Nome da Equipe] - [Seu Email/LinkedIn]
+Desenvolvido por grupo:  - 
+
 
