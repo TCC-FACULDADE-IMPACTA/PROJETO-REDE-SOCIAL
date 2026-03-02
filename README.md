@@ -24,7 +24,7 @@
 
 ---
 
-## 🚀 Sobre o Projeto
+## 1.🚀 Sobre o Projeto
 O **MOOD** foi desenvolvido para resolver a deficiência em compartilhar o sentimento real da pessoas. Diferente de outras redes, o nosso foco é usar algoritmos que cria conexão, ao invés de conteúdos vírais e estranhos.
 
 Este projeto é um MVP (Minimum Viable Product) focado em:
@@ -34,7 +34,7 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 
 ---
 
-## ✨ Funcionalidades Principais
+## 2.✨ Funcionalidades Principais
 *   ✅ **Autenticação Segura:** Cadastro, Login (JWT/OAuth).
 *   ✅ **Perfil de Usuário:** Edição, biografia, foto de perfil.
 *   ✅ **Feed em Tempo Real:** Postagens de texto e imagem.
@@ -44,7 +44,7 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 3.🛠️ Tecnologias Utilizadas
 A rede social foi construída com o seguinte stack tecnológico:
 
 **Front-end:**
@@ -67,7 +67,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 
 ---
 
-## 📋 Pré-requisitos
+## 4.📋 Pré-requisitos
 Antes de começar, você precisará ter instalado em sua máquina:
 *   [Python (3.16+)](https://www.python.org)
 *   [Docker](https://www.docker.com)
@@ -75,7 +75,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
 
 ---
 
-## 🖥️ Como Instalar e Rodar
+## 5.🖥️ Como Instalar e Rodar
 
 1.  **Clone o repositório:**
     ```bash
@@ -114,7 +114,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
 
 ---
 
-## 📊 Estrutura do Banco de Dados
+## 6.📊 Estrutura do Banco de Dados
 O modelo de dados é baseado em um grafo social, focado em interações:
 
 *   **Users:** ID, Nome, Email, Senha, Foto, Bio.
@@ -124,7 +124,7 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 
 ---
 
-## 🤝 Como Contribuir
+## 7.🤝 Como Contribuir
 Contribuições são o que tornam a comunidade open-source um lugar incrível!
 
 1.  Faça o Fork do projeto.
@@ -135,8 +135,9 @@ Contribuições são o que tornam a comunidade open-source um lugar incrível!
 
 ---
 
-## 📜 Licença
+## 8.📜 Licença
 Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informações.
 
 ---
 Desenvolvido por [Seu Nome/Nome da Equipe] - [Seu Email/LinkedIn]
+
