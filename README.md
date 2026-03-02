@@ -3,6 +3,9 @@
 
 # 🌐 MOOD
 
+<img width="515" height="463" alt="logo" src="https://github.com/user-attachments/assets/c84054b2-c6a0-4ac8-af69-659047f2ba3e" />
+
+---
 > A plataforma social focada em compartilhar como você está se sentindo.
 
 ---
@@ -156,5 +159,6 @@ Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informaç
 
 ---
 Desenvolvido por grupo:  - 
+
 
 
