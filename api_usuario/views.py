@@ -1,103 +1,93 @@
-import json
-import jwt
-import datetime
-from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, Credencial
+from .serializers import CadastroSerializer, LoginSerializer
+from django.conf import settings
+from datetime import datetime, timedelta, timezone
+import jwt
 
-@csrf_exempt
+# SE O MÉTODO FOR POST, PROCESSA O CADASTRO
+@api_view(['POST'])
 def cadastrar_usuario(request):
     """ Fluxo: CADASTRAR USUÁRIO """
-    if request.method == 'POST':
+
+    # O SERIALIZER VALIDA OS DADOS
+    serializer = CadastroSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        data = serializer.validated_data
+        
         try:
-            data = json.loads(request.body)
-            # Dados do Usuário e Credencial
-            nome = data.get('nome')
-            username = data.get('username')
-            aniversario = data.get('aniversario')
-            email = data.get('email')
-            senha = data.get('senha')
-
-            # VALIDAR DADOS
-            if not all([nome, username, aniversario, email, senha]):
-                return JsonResponse({'erro': 'Validação falhou. Preencha todos os campos.'}, status=400)
-
-            # SISTEMA VERIFICA E-MAIL E @USERNAME NO BANCO
-            username_existe = Usuario.objects.filter(username=username).exists()
-            email_existe = Credencial.objects.filter(email=email).exists()
-
-            if username_existe or email_existe:
-                # SISTEMA NOTIFICA O USUÁRIO
-                return JsonResponse({'erro': 'Username ou E-mail já cadastrado.'}, status=409)
-
-            # SISTEMA CRIA HASH COM BCRYPT E SALVA NO BANCO
-            # Cria o usuário primeiro
+            # SISTEMA CRIA O USUÁRIO
             novo_usuario = Usuario.objects.create(
-                nome=nome,
-                username=username,
-                aniversario=aniversario
+                nome=data['nome'],
+                username=data['username'],
+                aniversario=data['aniversario']
             )
-            # Cria a credencial atrelada a ele com senha hasheada
+            
+            # CRIA A CREDENCIAL 
             Credencial.objects.create(
-                email=email,
-                senha=make_password(senha), # Hash via Bcrypt
+                email=data['email'],
+                senha=make_password(data['senha']),
                 usuario=novo_usuario
             )
-
-            # SISTEMA REDIRECIONA PARA A TELA DE BOAS VINDAS
-            return JsonResponse({'mensagem': 'Usuário cadastrado com sucesso! Bem-vindo.'}, status=201)
-        # FIM DO FLUXO
+            # RETORNA RESPOSTA DE SUCESSO
+            return Response(
+                {'mensagem': 'Usuário cadastrado com sucesso! Bem-vindo.'}, 
+                status=status.HTTP_201_CREATED
+            )
+        # SE HOUVER QUALQUER ERRO DURANTE O PROCESSO, RETORNA UM ERRO INTERNO    
         except Exception as e:
-            return JsonResponse({'erro': f'Erro interno: {str(e)}'}, status=500)
+            return Response({'erro': f'Erro interno: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-    # Caso o método não seja POST
-    return JsonResponse({'erro': 'Método não permitido.'}, status=405)
+    # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: EMAIL INVÁLIDO)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
+
+# FLUXO DE LOGIN
+@api_view(['POST'])
 def efetuar_login(request):
     """ Fluxo: EFETUAR LOGIN """
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            identificador = data.get('login') or data.get('email') or data.get('username') # E-mail ou username
-            senha = data.get('senha')
 
-            # VALIDAR DADOS
-            if not identificador or not senha:
-                return JsonResponse({'erro': 'Dados incompletos.'}, status=400)
+    # VALIDA OS DADOS DO LOGIN
+    serializer = LoginSerializer(data=request.data)
 
-            # SISTEMA BUSCA USUARIO PELO E-MAIL E @USERNAME
-            # Como estão em tabelas separadas, buscamos nas duas
-            credencial = Credencial.objects.filter(email=identificador).first()
-            if not credencial:
-                usuario = Usuario.objects.filter(username=identificador).first()
-                if usuario:
-                    credencial = usuario.credencial
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            # USUÁRIO LOCALIZADO?
-            if credencial and check_password(senha, credencial.senha):
-                # SIM: SISTEMA GERA TOKEN JWT E LIBERA ACESSO
-                payload = {
-                    'usuario_id': credencial.usuario.id,
-                    'username': credencial.usuario.username,
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
-                    'iat': datetime.datetime.utcnow()
-                }
-                token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    # EXTRAÇÃO DOS DADOS VALIDADOS
+    identificador = serializer.validated_data['login']
+    senha = serializer.validated_data['senha']
 
-                # SISTEMA REDIRECIONA PARA A TELA DE BOAS VINDAS
-                return JsonResponse({
-                    'mensagem': 'Login efetuado com sucesso! Bem-vindo.',
-                    'token': token
-                }, status=200)
-            else:
-                # NÃO: SISTEMA NOTIFICA O USUARIO
-                return JsonResponse({'erro': 'Usuário não localizado ou senha incorreta.'}, status=401)
+    # SISTEMA BUSCA USUÁRIO
+    credencial = Credencial.objects.filter(email=identificador).first()
+    
+    if not credencial:
+        # SE NÃO ACHOU POR E-MAIL, TENTA BUSCAR PELO USERNAME PRIMEIRO
+        usuario = Usuario.objects.filter(username=identificador).first()
+        if usuario:
+            credencial = Credencial.objects.filter(usuario=usuario).first()
 
-        except Exception as e:
-            return JsonResponse({'erro': f'Erro interno: {str(e)}'}, status=500)
-            
-    return JsonResponse({'erro': 'Método não permitido.'}, status=405)
+    # VALIDAR SENHA E GERAR TOKEN
+    if credencial and check_password(senha, credencial.senha):
+        payload = {
+            'usuario_id': credencial.usuario.id,
+            'username': credencial.usuario.username,
+            'exp': datetime.now(timezone.utc) + timedelta(hours=24), #TOKEN EXPIRA EM 24 HORAS
+            'iat': datetime.now(timezone.utc)
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    
+        return Response({
+            'mensagem': 'Login efetuado com sucesso!',
+            'token': token
+        }, status=status.HTTP_200_OK)
+
+    # FALHA NA AUTENTICAÇÃO
+    return Response(
+        {'erro': 'Credenciais inválidas.'}, 
+        status=status.HTTP_401_UNAUTHORIZED
+    )
