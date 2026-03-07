@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'api_usuario',
     'rest_framework'
 ]
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -68,6 +70,25 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+# Configuração para CORS (APENAS PARA O FRONTEND)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+# permite todas as origens (PARA TESTES! NÃO RECOMENDADO PARA PRODUÇÃO)
+# CORS_ALLOW_ALL_ORIGINS = True
+
+# Permite cabeçalhos personalizados
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
 
 WSGI_APPLICATION = 'setup.wsgi.application'
@@ -111,6 +132,18 @@ AUTH_PASSWORD_VALIDATORS = [
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
+
+# Configuração para Django padrão (Forms)
+DATE_INPUT_FORMATS = [
+    '%d/%m/%Y',      # '25/12/2024'
+    '%Y-%m-%d',      # '2024-12-25'
+]
+
+# Configuração específica para Django REST Framework
+REST_FRAMEWORK = {
+    'DATE_INPUT_FORMATS': ['%d/%m/%Y', 'iso-8601'],
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

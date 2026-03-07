@@ -17,4 +17,4 @@ class Credencial(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='credencial', db_column='id_usuarios')
 
     class Meta:
-        db_table = 'credenciais'
+        db_table = 'credenciais' # Força o nome da tabela no banco
