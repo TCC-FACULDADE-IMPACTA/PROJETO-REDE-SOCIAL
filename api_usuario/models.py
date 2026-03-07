@@ -1,4 +1,4 @@
-#Tabelas 'usuarios' e 'credenciais' do DER
+#Tabelas 'usuarios' e 'credenciais'
 
 from django.db import models
 

@@ -62,7 +62,7 @@ def efetuar_login(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            identificador = data.get('login') # E-mail ou username
+            identificador = data.get('login') or data.get('email') or data.get('username') # E-mail ou username
             senha = data.get('senha')
 
             # VALIDAR DADOS
