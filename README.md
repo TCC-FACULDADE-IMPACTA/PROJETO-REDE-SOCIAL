@@ -50,7 +50,6 @@ A rede social foi construída com o seguinte stack tecnológico:
 
 **Back-end:**
 *   Python / Django
-*   Socket.io - Funcionalidades em tempo real
 
 
 **Banco de Dados:**
@@ -58,7 +57,6 @@ A rede social foi construída com o seguinte stack tecnológico:
   
 
 **Serviços/DevOps:**
-*   Docker
 *   Git/GitHub
 
 ---
@@ -66,7 +64,6 @@ A rede social foi construída com o seguinte stack tecnológico:
 ## 4.📋 Pré-requisitos
 Antes de começar, você precisará ter instalado em sua máquina:
 *   [Python (3.16+)](https://www.python.org)
-*   [Docker](https://www.docker.com)
 *   [PostGreSQL (18.3+)](https://www.postgresql.org)
 
 ---
@@ -159,6 +156,7 @@ Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informaç
 
 ---
 Desenvolvido por grupo:  - 
+
 
 
 
