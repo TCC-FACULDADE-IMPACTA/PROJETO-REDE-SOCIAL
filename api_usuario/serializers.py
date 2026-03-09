@@ -27,3 +27,9 @@ class LoginSerializer(serializers.Serializer):
     # ACEITA E-MAIL OU USERNAME COMO 'LOGIN'
     login = serializers.CharField(required=True)
     senha = serializers.CharField(required=True, write_only=True)
+
+# SERIALIZER PARA EXIBIR O PERFIL DO USUÁRIO (SEM DADOS SENSÍVEIS)
+class PerfilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['id', 'nome', 'username', 'aniversario', 'foto']
