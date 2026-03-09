@@ -1,9 +1,10 @@
+from urllib import request
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, Credencial
-from .serializers import CadastroSerializer, LoginSerializer
+from .serializers import CadastroSerializer, LoginSerializer, PerfilSerializer
 from django.conf import settings
 from datetime import datetime, timedelta, timezone
 import jwt
@@ -91,3 +92,23 @@ def efetuar_login(request):
         {'erro': 'Credenciais inválidas.'}, 
         status=status.HTTP_401_UNAUTHORIZED
     )
+
+@api_view(['GET'])
+def ver_perfil(request):
+    """ Fluxo: VER PERFIL DO USUÁRIO """
+    auth_header = request.headers.get('Authorization')
+
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return Response({'erro': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    token = auth_header.split(' ')[1]
+
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        usuario_id = payload.get('usuario_id')
+        usuario = Usuario.objects.get(id=usuario_id)
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
+        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    serializer = PerfilSerializer(usuario)
+    return Response(serializer.data, status=status.HTTP_200_OK)
