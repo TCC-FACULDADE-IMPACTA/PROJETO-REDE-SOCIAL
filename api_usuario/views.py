@@ -93,16 +93,19 @@ def efetuar_login(request):
         status=status.HTTP_401_UNAUTHORIZED
     )
 
+# FLUXO: VER PERFIL DO USUÁRIO
 @api_view(['GET'])
 def ver_perfil(request):
     """ Fluxo: VER PERFIL DO USUÁRIO """
+    
     auth_header = request.headers.get('Authorization')
-
+    # VERIFICA SE O CABEÇALHO DE AUTORIZAÇÃO ESTÁ PRESENTE E COMEÇA COM 'Bearer '
     if not auth_header or not auth_header.startswith('Bearer '):
         return Response({'erro': 'Token de autenticação não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
-
+    # EXTRAINDO O TOKEN DO CABEÇALHO
     token = auth_header.split(' ')[1]
 
+    # DECODIFICANDO O TOKEN PARA OBTENÇÃO DOS DADOS DO USUÁRIO
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         usuario_id = payload.get('usuario_id')
@@ -110,5 +113,6 @@ def ver_perfil(request):
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
         return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+    # SE O USUÁRIO FOR ENCONTRADO, RETORNA OS DADOS DO PERFIL
     serializer = PerfilSerializer(usuario)
     return Response(serializer.data, status=status.HTTP_200_OK)
