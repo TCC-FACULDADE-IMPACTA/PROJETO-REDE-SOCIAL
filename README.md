@@ -35,10 +35,10 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 ## 2.✨ Funcionalidades Principais
 *   ✅ **Autenticação Segura:** Cadastro, Login (JWT/OAuth).
 *   ✅ **Perfil de Usuário:** Edição, biografia, foto de perfil.
-*   ✅ **Feed em Tempo Real:** Postagens de texto e imagem.
+*   ✅ **Feed em Tempo Real:** Postagens de texto e Gift.
 *   ✅ **Interações:** Curtidas, comentários e compartilhamentos.
 *   ✅ **Sistema de Amizade/Seguidores:** Seguir, unfollow, solicitações.
-*   ✅ **Notificações:** Alertas em tempo real.
+  
 
 ---
 
@@ -115,6 +115,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
     |  POST  |  /api/cadastrar/  | Cria um novo usuário e sua credencial vinculada|
     |  POST  |   /api/login/     | Autentica e retorna um Token JWT.              |
     |  GET   |   /admin/         | Painel de controle administrativo do Django.   |
+    |  GET   |  /api/perfil      | Retorna o Perfil do usuario (REQUER TOKEN)     |
     ```
 ---
 
@@ -156,6 +157,7 @@ Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informaç
 
 ---
 Desenvolvido por grupo:  - 
+
 
 
 
