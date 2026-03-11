@@ -33,3 +33,8 @@ class PerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ['id', 'nome', 'username', 'aniversario', 'foto']
+
+class FotoPerfilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['foto']
