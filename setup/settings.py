@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,6 +139,10 @@ DATE_INPUT_FORMATS = [
     '%d/%m/%Y',      # '25/12/2024'
     '%Y-%m-%d',      # '2024-12-25'
 ]
+
+# Configuração para arquivos de mídia
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Configuração específica para Django REST Framework
 REST_FRAMEWORK = {
