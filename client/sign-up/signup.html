@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="../imagens/LOGO-ICO.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="signup.js" defer></script>
+    <title>Mood - Cadastro</title>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <!-- LOGO -->
+      <div class="logo-top">
+        <!-- LOGO DESKTOP -->
+        <img
+          src="../imagens/MOOD-LGO.png"
+          alt="Logo Mood"
+          class="logo-desktop"
+        />
+        <!-- LOGO MOBILE -->
+        <img
+          src="../imagens/MOOD-LOGO-SEM-FUNDO.png"
+          alt="Logo Mood"
+          class="logo-mobile"
+        />
+      </div>
+      <!-- CARD CADASTRO -->
+      <div class="signup-container">
+        <div class="logo">Cadastre-se</div>
+        <div class="subtitle">Compartilhe como você está se sentindo hoje!</div>
+        <form onsubmit="signupUser(event)">
+          <!-- EMAIL -->
+          <div class="input-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              required
+            />
+            <div class="error-message" id="emailError">Email inválido</div>
+          </div>
+          <!-- NOME + USUÁRIO -->
+          <div class="input-row">
+            <div class="input-group">
+              <label for="name">Nome completo</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Seu nome"
+                autocomplete="name"
+                required
+              />
+              <div class="error-message" id="nameError">Nome inválido</div>
+            </div>
+            <div class="input-group">
+              <label for="user">Usuário</label>
+              <input
+                type="text"
+                id="user"
+                placeholder="Usuário"
+                autocomplete="username"
+                required
+              />
+              <div class="error-message" id="userError">Usuário inválido</div>
+            </div>
+          </div>
+          <!-- NASCIMENTO -->
+          <div class="input-group">
+            <label for="nascimento">Data de nascimento</label>
+            <input
+              type="date"
+              id="nascimento"
+              min="1900-01-01"
+              max="2026-12-31"
+              required
+            />
+            <div class="error-message" id="birthError">Data inválida</div>
+          </div>
+          <!-- SENHAS -->
+          <div class="input-row">
+            <!-- SENHA -->
+            <div class="input-group">
+              <label for="password">Senha</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  autocomplete="new-password"
+                  oninput="checkPasswordStrength()"
+                  required
+                />
+                <span
+                  class="toggle-password"
+                  onclick="togglePassword('password')"
+                >
+                  👁️
+                </span>
+              </div>
+              <!-- BARRA FORÇA -->
+              <div class="password-strength">
+                <div id="strengthBar"></div>
+              </div>
+              <span id="strengthText"></span>
+            </div>
+            <!-- CONFIRMAR SENHA -->
+            <div class="input-group">
+              <label for="confirmPassword"> Confirmar senha </label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  placeholder="••••••••"
+                  autocomplete="new-password"
+                  required
+                />
+                <span
+                  class="toggle-password"
+                  onclick="togglePassword('confirmPassword')"
+                >
+                  👁️
+                </span>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="signup-btn">Cadastrar</button>
+        </form>
+        <div class="signup forgot">
+          Já tem uma conta?
+          <a href="../index.html"> Entrar com conta </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

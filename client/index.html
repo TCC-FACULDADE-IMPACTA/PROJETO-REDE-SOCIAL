@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="imagens/LOGO-ICO.png" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <script src="index.js" defer></script>
+  <script src="login.js" defer></script>
+  <title>Mood - Login</title> 
+</head>
+
+<body>
+  <div class="page-wrapper">
+    
+    <div class="preview-side">
+      <img src="imagens/MOOD-LGO.png" alt="Logo Mood" style="width: 300px; margin-bottom: 20px;">
+      <h1>Compartilhe seus moods 💜</h1>
+      <p>
+        Veja reações, publique sentimentos e acompanhe o dia a dia de quem é importante para você.
+      </p>
+      <img src="imagens/PreviewAPP.png" alt="Preview do app">
+    </div>
+    <div class="login-area">
+      <img src="imagens/MOOD-LGO.png" alt="Logo Mood" class="mobile-logo">
+      <!-- CARD LOGIN -->
+      <div class="login-container">
+        <div class="logo">Faça login</div>
+        <div class="subtitle">
+          Compartilhe como você está se sentindo hoje!
+        </div>
+        <form onsubmit="LoginUser(event)">
+          <!-- EMAIL -->
+          <div class="input-group">
+            <input 
+              type="email" 
+              id="email" 
+              placeholder=" " 
+              required
+            >
+            <label for="email">Email</label>
+            <span class="input-line"></span>
+          </div>
+          <!-- SENHA -->
+          <div class="input-group">
+            <div class="password-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                placeholder=" " 
+                required >
+              <label for="password">Senha</label>
+              <span class="toggle-password" onclick="togglePassword()">👁️</span>
+            <span class="input-line"></span>
+            </div>
+          </div>
+          <button type="submit" class="login-btn">Entrar</button>
+        </form>
+        <div class="social-login">
+          <button type="button" class="social-btn google" onclick="loginGoogle()">
+            <img src="imagens/google.png" alt="Google">
+            Entrar com Google
+          </button>
+          <button type="button" class="social-btn facebook" onclick="loginFacebook()">
+            <img src="imagens/face.png" alt="Facebook">
+            Entrar com Facebook
+          </button>
+        </div>
+       <!--<a href="#" class="forgot">Esqueceu a senha?</a>--> 
+        <div class="divider"></div>
+        <div class="signup">
+          Não tem uma conta?
+          <a href="./sign-up/signup.html">Criar conta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

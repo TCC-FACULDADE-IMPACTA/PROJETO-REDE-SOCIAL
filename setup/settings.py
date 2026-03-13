@@ -144,7 +144,7 @@ DATE_INPUT_FORMATS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Configuração específica para Django REST Framework
+# Configuração padrão de data para Django REST Framework
 REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ['%d/%m/%Y', 'iso-8601'],
 }
