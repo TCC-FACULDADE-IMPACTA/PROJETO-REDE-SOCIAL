@@ -50,6 +50,10 @@ A rede social foi construída com o seguinte stack tecnológico:
 
 **Back-end:**
 *   Python / Django
+*   Node.js
+*   Express.js
+*   SSE funcionalidades em tempo real
+  
 
 
 **Banco de Dados:**
@@ -65,6 +69,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 Antes de começar, você precisará ter instalado em sua máquina:
 *   [Python (3.16+)](https://www.python.org)
 *   [PostGreSQL (18.3+)](https://www.postgresql.org)
+*   [Node.js (24.14LTS+)]
 
 ---
 
@@ -86,7 +91,8 @@ Antes de começar, você precisará ter instalado em sua máquina:
 4.  **Instale as dependências:**
    
     ```bash
-    pip install -r requirements.txt 
+    pip install -r requirements.txt
+    npm install 
     ```
 
 5.  **Suba o banco de dados com Docker:**
