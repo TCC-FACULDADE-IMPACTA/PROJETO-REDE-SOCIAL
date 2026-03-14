@@ -75,8 +75,8 @@ TEMPLATES = [
 
 # Configuração para CORS (APENAS PARA O FRONTEND)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:5173", # Url padrão Vite
+    "http://127.0.0.1:5173",
 ]
 
 # permite todas as origens (PARA TESTES! NÃO RECOMENDADO PARA PRODUÇÃO)

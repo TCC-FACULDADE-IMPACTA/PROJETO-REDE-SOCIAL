@@ -6,7 +6,7 @@ from .models import Usuario, Credencial
 class CadastroSerializer(serializers.Serializer):
     nome = serializers.CharField()
     username = serializers.CharField()
-    aniversario = serializers.DateField()
+    nascimento = serializers.DateField()
     email = serializers.EmailField()
     senha = serializers.CharField(write_only=True)
 
@@ -32,7 +32,7 @@ class LoginSerializer(serializers.Serializer):
 class PerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['id', 'nome', 'username', 'aniversario', 'foto']
+        fields = ['id', 'nome', 'username', 'nascimento', 'foto']
 
 class FotoPerfilSerializer(serializers.ModelSerializer):
     class Meta:

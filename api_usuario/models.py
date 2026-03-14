@@ -6,7 +6,7 @@ class Usuario(models.Model):
     nome = models.CharField(max_length=50)
     foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
     username = models.CharField(max_length=150, unique=True)
-    aniversario = models.DateField()
+    nascimento = models.DateField()
 
     class Meta:
         db_table = 'usuarios' # Força o nome da tabela no banco
