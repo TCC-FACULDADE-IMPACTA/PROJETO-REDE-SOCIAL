@@ -236,11 +236,10 @@ try {
 const response = await api.post('api/cadastrar/', dadosParaCadastro);
 
 if (response.status === 201) {
-alert(response.data.mensagem); // "Usuário cadastrado com sucesso!"
-                                
+console.log("Usuário cadastrado com sucesso!");                              
 //Redireciona para o login após o sucesso
 alert("✅ Conta criada com sucesso!")
-window.location.href = '../index.html'; 
+window.location.href = '../login.html'; 
 }
 } catch (error) {
 // Tratamento de Erros de Validação (Ex: e-mail já existe)
