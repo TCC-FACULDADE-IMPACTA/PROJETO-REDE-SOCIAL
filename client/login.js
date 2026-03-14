@@ -1,3 +1,5 @@
+import api from './services/api.js';
+
 // =============================
 // MOSTRAR / OCULTAR SENHA
 // =============================
@@ -35,10 +37,8 @@ function LoginUser(event) {
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const loginButton = document.querySelector(".login-btn");
-
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-
   const validEmail = /\S+@\S+\.\S+/.test(email);
 
   // =============================
@@ -56,24 +56,8 @@ function LoginUser(event) {
     setError(passwordInput);
     return;
   }
-
-  // =============================
-  // USUÁRIO SIMULADO
-  // =============================
-  const usuarioCadastrado = {
-    email: "usuario@mood.com",
-    senha: "123456"
-  };
-
-  if (email !== usuarioCadastrado.email) {
-    setError(emailInput);
-    return;
-  }
-
-  if (password !== usuarioCadastrado.senha) {
-    setError(passwordInput);
-    return;
-  }
+  
+  
 
   // =============================
   // ESTADO LOADING NO BOTÃO
@@ -81,16 +65,35 @@ function LoginUser(event) {
   loginButton.disabled = true;
   loginButton.textContent = "Entrando...";
 
-  // =============================
-  // LOGIN SUCESSO
-  // =============================
-  setTimeout(() => {
+
+}
+
+// =============================
+// ENVIO DO FORMULÁRIO
+// =============================
+const form = document.querySelector("form");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  
+  const dados = {
+    email: document.getElementById("email").value.trim(),
+    password: document.getElementById("password").value.trim()
+  };
+  
+  try {
+    const response = await api.post("api/login/", dados);
+    // salvar token no localStorage
+    localStorage.setItem('token', response.data.token);
+
     alert("✅ Login realizado com sucesso!");
     loginButton.disabled = false;
     loginButton.textContent = "Entrar";
-    // window.location.href = "home.html";
-  }, 800);
-}
+    window.location.href = "home.html";
+    } catch (error) {
+    alert(error.response?.data?.error || "❌ Erro ao realizar login!");
+  }
+});
 
 // =============================
 // LOGIN SOCIAL (SIMULAÇÃO)

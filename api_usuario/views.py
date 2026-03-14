@@ -26,7 +26,7 @@ def cadastrar_usuario(request):
             novo_usuario = Usuario.objects.create(
                 nome=data['nome'],
                 username=data['username'],
-                aniversario=data['aniversario']
+                nascimento=data['nascimento']
             )
             
             # CRIA A CREDENCIAL 
