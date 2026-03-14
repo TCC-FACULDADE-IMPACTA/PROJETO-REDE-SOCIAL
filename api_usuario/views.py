@@ -42,6 +42,7 @@ def cadastrar_usuario(request):
             )
         # SE HOUVER QUALQUER ERRO DURANTE O PROCESSO, RETORNA UM ERRO INTERNO    
         except Exception as e:
+            print("Erro ao cadastrar usuário:", {str(e)})
             return Response({'erro': f'Erro interno: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: EMAIL INVÁLIDO)
