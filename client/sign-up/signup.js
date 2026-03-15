@@ -145,7 +145,7 @@ birthError.style.display = "none"
 
 if(password.value.length < 6){
     
-    alert("A senha precisa ter pelo menos 6 caracteres.")
+    alert("A senha precisa ter pelo menos 8 caracteres.")
     valid = false
     
 }
@@ -157,9 +157,9 @@ if(password.value !== confirmPassword.value){
     
 }
 
-if(!valid) return
-
-
+if(!valid){
+    event.preventDefault(); // Impede o envio do formulário
+}
 
 }
 

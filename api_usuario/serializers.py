@@ -1,19 +1,30 @@
 from rest_framework import serializers
 from .models import Usuario, Credencial
+from datetime import date
 
 
 # SERIALIZERS PARA O CADASTRO DE USUÁRIOS COM VALIDAÇÕES
 class CadastroSerializer(serializers.Serializer):
     nome = serializers.CharField()
-    username = serializers.CharField()
+    username = serializers.CharField(min_length=4, max_length=30)
     nascimento = serializers.DateField()
     email = serializers.EmailField()
-    senha = serializers.CharField(write_only=True)
+    senha = serializers.CharField(write_only=True, min_length=8)
 
     # SISTEMA VERIFICA E-MAIL/USERNAME NO BANCO
     def validate_username(self, value):
         if Usuario.objects.filter(username=value).exists():
             raise serializers.ValidationError("Este nome de usuário já está em uso.")
+        return value
+    
+    # VALIDAÇÃO DE IDADE (Mínimo 18 anos)
+    def validate_nascimento(self, value):
+        today = date.today()
+        # Cálculo preciso de idade
+        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        
+        if age < 18:
+            raise serializers.ValidationError("Você precisa ter pelo menos 18 anos.")
         return value
     
     def validate_email(self, value):
