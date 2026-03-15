@@ -52,7 +52,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 *   Python / Django
 *   Node.js
 *   Express.js
-*   SSE funcionalidades em tempo real
+  
   
 
 
@@ -62,6 +62,8 @@ A rede social foi construída com o seguinte stack tecnológico:
 
 **Serviços/DevOps:**
 *   Git/GitHub
+*   Axios
+*   Vite
 
 ---
 
@@ -69,7 +71,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 Antes de começar, você precisará ter instalado em sua máquina:
 *   [Python (3.16+)](https://www.python.org)
 *   [PostGreSQL (18.3+)](https://www.postgresql.org)
-*   [Node.js (24.14LTS+)]
+*   [Node.js (24.14LTS+)](https://nodejs.org/pt-br)
 
 ---
 
@@ -95,26 +97,26 @@ Antes de começar, você precisará ter instalado em sua máquina:
     npm install 
     ```
 
-5.  **Suba o banco de dados com Docker:**
-    ```bash
-    docker-compose up -d
-    ```
-6.  **Migrar o Banco de Dados::**
+5.  **Migrar o Banco de Dados::**
     ```bash
     python manage.py makemigrations
     python manage.py migrate
     ```
-7.  **Criar Administrador (Django Admin):**
+6.  **Criar Administrador (Django Admin):**
     ```bash
     python manage.py createsuperuser
     ```
 
-8.  **Rodar o Servidor:**
+7.  **Rodar o Servidor:**
     ```bash
     python manage.py runserver
     ```
+    **Rodar o frond-end:**
+    ```bash
+    npm run dev
+    ```
 
-9.  Acesse as seguintes Rotas
+8.  Acesse as seguintes Rotas
     ```
     | Método |     Endpoint      |                    Descrição                   |
     | -------| ----------------- | -----------------------------------------------|
@@ -162,7 +164,7 @@ Contribuições são o que tornam a comunidade open-source um lugar incrível!
 Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informações.
 
 ---
-Desenvolvido por grupo:  - 
+Desenvolvido por grupo: MOOD - LucasOliveira1995, GuilhermeTyper, nosferavic, Debora001-jpg, maxalexandre15, BMuramoto, GUILHERME-GTS.  
 
 
 
