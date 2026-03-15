@@ -252,13 +252,6 @@ alert("Erro interno no servidor. Tente novamente mais tarde.");
 }
 }
 });
-// =============================
-// SALVAR USUÁRIO
-// =============================
-
-usuarios.push(novoUsuario)
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
-console.log("Usuário cadastrado:", novoUsuario)
 
 
                     

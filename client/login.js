@@ -71,29 +71,57 @@ function LoginUser(event) {
 // =============================
 // ENVIO DO FORMULÁRIO
 // =============================
-const form = document.querySelector("form");
+// 1. Seleção dos elementos (Garanta que os IDs existam no HTML)
+const loginForm = document.querySelector(".login-form");
+const loginButton = document.querySelector(".login-btn");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  
-  const dados = {
-    email: document.getElementById("email").value.trim(),
-    password: document.getElementById("password").value.trim()
-  };
-  
-  try {
-    const response = await api.post("api/login/", dados);
-    // salvar token no localStorage
-    localStorage.setItem('token', response.data.token);
 
-    alert("✅ Login realizado com sucesso!");
-    loginButton.disabled = false;
-    loginButton.textContent = "Entrar";
-    window.location.href = "home.html";
+// 3. Evento de envio
+// Verificamos se o form existe para evitar o erro "is not defined"
+if (loginForm) {
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+
+    // Estado de Loading
+    loginButton.disabled = true;
+    loginButton.textContent = "Entrando...";
+
+    // Montagem dos dados conforme seu views.py (login e senha)
+    const dadosParaLogin = {
+      login: email,
+      senha: password
+    };
+
+    try {
+      const response = await api.post("api/login/", dadosParaLogin);
+      
+      // Salva o token JWT retornado pelo Django
+      localStorage.setItem('token', response.data.token);
+
+      alert("✅ Login realizado com sucesso!");
+      window.location.href = "home.html";
+      
     } catch (error) {
-    alert(error.response?.data?.error || "❌ Erro ao realizar login!");
-  }
-});
+      console.error("Erro detalhado da API:", error.response?.data);
+      
+      // Se for erro 400, o Django dirá qual campo está errado
+      const mensagem = error.response?.data?.erro || "❌ Usuário ou senha incorretos.";
+      alert(mensagem);
+    } finally {
+      loginButton.disabled = false;
+      loginButton.textContent = "Entrar";
+    }
+  });
+} else {
+  console.error("Elemento não encontrado no HTML.");
+}
 
 // =============================
 // LOGIN SOCIAL (SIMULAÇÃO)
