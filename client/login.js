@@ -71,13 +71,12 @@ function LoginUser(event) {
 // =============================
 // ENVIO DO FORMULÁRIO
 // =============================
-// 1. Seleção dos elementos (Garanta que os IDs existam no HTML)
 const loginForm = document.querySelector(".login-form");
 const loginButton = document.querySelector(".login-btn");
 
 
-// 3. Evento de envio
-// Verificamos se o form existe para evitar o erro "is not defined"
+// Evento de envio
+// Verificamos se o loginForm existe
 if (loginForm) {
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -93,7 +92,7 @@ if (loginForm) {
     loginButton.disabled = true;
     loginButton.textContent = "Entrando...";
 
-    // Montagem dos dados conforme seu views.py (login e senha)
+    // Montagem dos dados
     const dadosParaLogin = {
       login: email,
       senha: password

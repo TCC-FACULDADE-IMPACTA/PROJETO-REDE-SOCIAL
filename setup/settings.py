@@ -102,9 +102,9 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rede_social',
-        'USER': 'postgres',
-        'PASSWORD': '58462360',
+        'NAME': 'rede_social', # Nome do banco de dados
+        'USER': 'postgres',    # Nome do usuário
+        'PASSWORD': '58462360',# Senha do usuário
         'HOST': 'localhost', # ou o IP do servidor
         'PORT': '5432',
     }
