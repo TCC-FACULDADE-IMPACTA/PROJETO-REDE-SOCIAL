@@ -64,6 +64,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 *   Git/GitHub
 *   Axios
 *   Vite
+*   DJANGO RESTFRAMEWORK
 
 ---
 
