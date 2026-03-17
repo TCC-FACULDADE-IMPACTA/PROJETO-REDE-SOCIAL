@@ -10,13 +10,6 @@ class CadastroSerializer(serializers.Serializer):
     nascimento = serializers.DateField()
     email = serializers.EmailField()
     senha = serializers.CharField(write_only=True, min_length=8)
-    confirmar_senha = serializers.CharField(write_only=True)
-
-    # VALIDAÇÃO DE SENHA E CONFIRMAR SENHA
-    def validate(self, data):
-        if data['senha'] != data.get('confirmar_senha'):
-            raise serializers.ValidationError("As senhas não coincidem.")
-        return data
 
     # SISTEMA VERIFICA E-MAIL/USERNAME NO BANCO
     def validate_username(self, value):

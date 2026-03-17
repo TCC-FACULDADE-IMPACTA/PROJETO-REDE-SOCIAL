@@ -228,8 +228,7 @@ email: document.getElementById("email").value.trim(),
 nome: document.getElementById("nome").value.trim(),
 username: document.getElementById("user").value.trim(),
 nascimento: document.getElementById("nascimento").value.trim(),
-senha: document.getElementById("password").value.trim(),
-confirmar_senha: document.getElementById("confirm-password").value.trim()
+senha: document.getElementById("password").value.trim()
 };
                         
 try {
