@@ -137,7 +137,8 @@ async function signupUser(event) {
     nome: nome.value.trim(),
     username: user.value.trim(),
     nascimento: nascimento.value.trim(),
-    senha: password.value.trim()
+    senha: password.value.trim(),
+    confirmar_senha: confirmPassword.value.trim()
   };
 
   try {
@@ -148,7 +149,14 @@ async function signupUser(event) {
     }
   } catch (error) {
     if (error.response && error.response.status === 400) {
-      alert("Este email já está cadastrado. " + JSON.stringify(error.response.data));
+      // Erros de validação
+      const erros = error.response.data;
+      let mensagemErro = "Erro ao cadastrar usuário:\n";
+      // Exibe todos os erros retornados pela API
+      for (const campo in erros) {
+        mensagemErro += `- ${campo}: ${erros[campo]}\n`;
+      }
+      alert(mensagemErro);
     } else {
       alert("Erro interno no servidor. Tente novamente mais tarde.");
     }
