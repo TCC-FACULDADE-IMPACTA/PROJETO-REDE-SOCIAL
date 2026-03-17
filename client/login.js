@@ -132,3 +132,10 @@ function loginGoogle() {
 function loginFacebook() {
   alert("📘 Login com Facebook (simulação)");
 }
+
+// =============================
+// EXPOR FUNÇÕES AO ESCOPO GLOBAL
+// =============================
+window.togglePassword = togglePassword;
+window.loginGoogle = loginGoogle;
+window.loginFacebook = loginFacebook;
