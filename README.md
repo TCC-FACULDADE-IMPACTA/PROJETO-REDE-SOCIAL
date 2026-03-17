@@ -3,7 +3,7 @@
 
 # 🌐 MOOD
 
-<img width="515" height="463" alt="logo" src="https://github.com/user-attachments/assets/c84054b2-c6a0-4ac8-af69-659047f2ba3e" />
+<img width="800" height="264" alt="MOOD-LGO" src="https://github.com/user-attachments/assets/4ac2dad0-f6af-4b92-a92c-5765ec52e920" />
 
 ---
 > A plataforma social focada em compartilhar como você está se sentindo.
@@ -17,8 +17,9 @@
 4. Pré-requisitos.
 5. Como Instalar e Rodar.
 6. Estrutura do Banco de Dados.
-7. Como Contribuir.
-8. Licença.
+7. Estrutura de Pastas
+8. Diagramas de atividades.
+9. Licença.
 
 ---
 
@@ -150,14 +151,11 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ````
 ---
 
-## 8.🤝 Como Contribuir
-Contribuições são o que tornam a comunidade open-source um lugar incrível!
+## 8.🤝 Diagramas de atividades
+Diagramas que demostra comportamentos dinâmicos do sistemas e o processos de negócios.
 
-1.  Faça o Fork do projeto.
-2.  Crie uma branch para sua funcionalidade (`git checkout -b feature/NovaFuncionalidade`).
-3.  Commit suas mudanças (`git commit -m 'Adiciona NovaFuncionalidade'`).
-4.  Push para a branch (`git push origin feature/NovaFuncionalidade`).
-5.  Abra um Pull Request.
+1.  Funcionalidade Cadastro/Login:
+<img width="1508" height="654" alt="CADASTRO_DO_SISTEMA drawio" src="https://github.com/user-attachments/assets/cbde008c-2b72-484d-969d-28955521b9ee" />
 
 ---
 
