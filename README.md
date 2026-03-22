@@ -151,13 +151,13 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ````
 ---
 
-## 8.🤝 Diagramas de atividades
+## 8.🤝 Diagramas de atividades e banco
 Diagramas que demostra comportamentos dinâmicos do sistemas e o processos de negócios.
 
 1.  Funcionalidade Cadastro/Login:
 <img width="1508" height="654" alt="CADASTRO_DO_SISTEMA drawio" src="https://github.com/user-attachments/assets/cbde008c-2b72-484d-969d-28955521b9ee" />
+2. Banco <img width="1408" height="768" alt="Gemini_Generated_Image_3tn08n3tn08n3tn0" src="https://github.com/user-attachments/assets/24df5289-e56f-49d6-a380-de9e43e7b990" />
 
----
 
 ## 9.📜 Licença
 Distribuído sob a licença [MIT/Apache/GPL]. Veja `LICENSE` para mais informações.
