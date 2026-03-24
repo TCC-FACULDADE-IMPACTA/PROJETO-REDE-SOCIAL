@@ -36,3 +36,11 @@ class Postagem(models.Model):
 
     class Meta:
         db_table = 'postagens' # Força o nome da tabela no banco
+
+
+class ResetSenha(models.Model):
+    token = models.TextField(unique=True)
+    credencial = models.ForeignKey(Credencial, on_delete=models.CASCADE, related_name='reset_senha', db_column='id_credenciais') # Chave estrangeira para a credencial
+
+    class Meta:
+        db_table = 'reset_senha' # Força o nome da tabela no banco
