@@ -19,6 +19,9 @@ class Credencial(models.Model):
     class Meta:
         db_table = 'credenciais' # Força o nome da tabela no banco
 
+    def __str__(self): # Representação em string do objeto
+        return self.email
+
 class TokenVerificacaoEmail(models.Model):
     token = models.CharField(max_length=255, unique=True)
     verificado = models.BooleanField(default=False)
@@ -26,16 +29,6 @@ class TokenVerificacaoEmail(models.Model):
 
     class Meta:
         db_table = 'tokens_verificacao_email' # Força o nome da tabela no banco
-
-
-
-class Postagem(models.Model):
-    gif = models.BinaryField()
-    descricao = models.TextField()
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='postagens', db_column='id_usuarios') # Chave estrangeira para o usuário
-
-    class Meta:
-        db_table = 'postagens' # Força o nome da tabela no banco
 
 
 class ResetSenha(models.Model):
