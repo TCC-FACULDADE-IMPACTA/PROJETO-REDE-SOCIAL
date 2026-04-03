@@ -19,6 +19,9 @@ class Credencial(models.Model):
     class Meta:
         db_table = 'credenciais' # Força o nome da tabela no banco
 
+    def __str__(self): # Representação em string do objeto
+        return self.email
+
 class TokenVerificacaoEmail(models.Model):
     token = models.CharField(max_length=255, unique=True)
     verificado = models.BooleanField(default=False)
