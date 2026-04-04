@@ -5,7 +5,7 @@ from .models import PostSentimento
 class CriaPostSentimentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostSentimento
-        fields = ['gif_url', 'texto_sentimento', 'usuario']
+        fields = ['gif_url', 'texto_sentimento']
         extra_kwargs = {
             'texto_sentimento': {'required': True, 'allow_blank': False}, # Campo obrigatório
             'gif_url': {'required': False, 'allow_blank': True} # Campo opcional
