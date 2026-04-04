@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     path('api/buscar_gifs/', views.buscar_gifs, name='buscar_gifs'),
+    path('api/criar_post/', views.criar_post, name='criar_post'),
 ]

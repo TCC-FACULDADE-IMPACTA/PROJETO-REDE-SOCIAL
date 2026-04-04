@@ -28,7 +28,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -163,3 +162,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Configurações para serviços externos
+EXTERNAL_SERVICES = {
+    'GIPHY': {
+        'API_KEY': os.getenv('GIPHY_API_KEY'),
+        'API_URL': 'https://api.giphy.com/v1/gifs/search',
+        'LIMIT': 12,
+    },
+    'TRANSLATOR':{
+        'ENGINE': 'deep_translator.GoogleTranslator',
+        'SOURCE_LANGUAGE': 'pt',
+        'TARGET_LANGUAGE': 'en'
+    }
+}
