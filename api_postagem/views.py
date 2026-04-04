@@ -29,13 +29,14 @@ def buscar_gifs(request):
         # Simplifica os dados dos GIFs
         gifs_simplificados = []
         for gif in data.get('data', []):
-            imagem = gif.get('imagem', {})
-            fixed_height = imagem.get('fixed_height', {})
+            images = gif.get('images', {})
+            fixed_height = images.get('fixed_height', {})
+            url_gif = fixed_height.get('url')
 
             gifs_simplificados.append({
                 'id': gif['id'],
                 'titulo': gif['title'],
-                'url': fixed_height.get('url')
+                'url': url_gif
             })
 
         return Response({
