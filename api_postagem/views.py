@@ -16,6 +16,7 @@ from .models import PostSentimento
 def buscar_gifs(request):
     """ Fluxo: BUSCAR GIFS NO GIPHY (PUBLICO OU AUTENTICADO) """
 
+    # Verifica se o termo de busca foi fornecido
     query_pt = request.query_params.get('q', '')  # Termo de busca para o GIF
     if not query_pt:
         return Response({'erro': 'O parâmetro "q" é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -64,6 +65,8 @@ def buscar_gifs(request):
 @api_view(['POST'])
 def criar_post(request):
     """ Fluxo: CRIAR POST COM GIF """
+
+    # Verifica se o token de autenticação foi fornecido
     auth_header = request.headers.get('Authorization')
     if not auth_header or not auth_header.startswith('Bearer '):
         return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -86,3 +89,30 @@ def criar_post(request):
         }, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['DELETE'])
+def deletar_postagem(request, post_id):
+    """ Fluxo: DELETAR POST """
+
+    # Verifica se o token de autenticação foi fornecido
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    token = auth_header.split(' ')[1]
+
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        usuario_id = payload.get('usuario_id')
+        usuario = Usuario.objects.get(id=usuario_id)
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
+        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Verifica se a postagem existe e pertence ao usuário
+    try:
+        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario)
+        postagem.delete()
+        return Response({'mensagem': 'Postagem deletada com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
