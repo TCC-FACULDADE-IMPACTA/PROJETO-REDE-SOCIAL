@@ -11,6 +11,9 @@ class Usuario(models.Model):
     class Meta:
         db_table = 'usuarios' # Força o nome da tabela no banco
 
+    def __str__(self): # Representação em string do objeto
+        return self.username
+
 class Credencial(models.Model):
     email = models.EmailField(max_length=50, unique=True)
     senha = models.CharField(max_length=255) # Aumentado para suportar o hash do bcrypt

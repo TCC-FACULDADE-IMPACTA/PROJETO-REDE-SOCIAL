@@ -10,6 +10,7 @@ class PostSentimento(models.Model):
 
     class Meta:
         db_table = 'postagens' # Força o nome da tabela no banco
+        ordering = ['-data_criacao']  # Ordena os posts pela data de criação (mais recentes primeiro)
 
     def __str__(self): # Representação em string do objeto
         return f"{self.usuario.username} - {self.texto_sentimento[:30]}..."
