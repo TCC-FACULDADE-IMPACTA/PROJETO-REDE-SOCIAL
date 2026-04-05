@@ -10,7 +10,7 @@ class CriaPostSentimentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostSentimento
         fields = [
-            'id',
+            'id', # ID do post
             'usuario_nome',
             'usuario_username',
             'texto_sentimento',
@@ -21,5 +21,4 @@ class CriaPostSentimentoSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'texto_sentimento': {'required': True, 'allow_blank': False}, # Campo obrigatório
             'gif_url': {'required': False, 'allow_blank': True}, # Campo opcional
-            'usuario': {'required': True}  # Campo obrigatório
         }

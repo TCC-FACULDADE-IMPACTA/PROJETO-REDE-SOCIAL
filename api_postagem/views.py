@@ -111,7 +111,7 @@ def deletar_postagem(request, post_id):
 
         # Verifica se a postagem existe e pertence ao usuário
     try:
-        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario)
+        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario) # Garante que o usuário só possa deletar suas próprias postagens
         postagem.delete()
         return Response({'mensagem': 'Postagem deletada com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
     except PostSentimento.DoesNotExist:

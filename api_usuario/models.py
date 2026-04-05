@@ -24,19 +24,3 @@ class Credencial(models.Model):
 
     def __str__(self): # Representação em string do objeto
         return self.email
-
-class TokenVerificacaoEmail(models.Model):
-    token = models.CharField(max_length=255, unique=True)
-    verificado = models.BooleanField(default=False)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='tokens_verificacao_email', db_column='id_usuarios') # Chave estrangeira para o usuário
-
-    class Meta:
-        db_table = 'tokens_verificacao_email' # Força o nome da tabela no banco
-
-
-class ResetSenha(models.Model):
-    token = models.TextField(unique=True)
-    credencial = models.ForeignKey(Credencial, on_delete=models.CASCADE, related_name='reset_senha', db_column='id_credenciais') # Chave estrangeira para a credencial
-
-    class Meta:
-        db_table = 'reset_senha' # Força o nome da tabela no banco
