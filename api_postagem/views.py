@@ -140,5 +140,36 @@ def listar_postagens(request):
         return Response({'mensagem': 'Nenhuma postagem encontrada.'}, status=status.HTTP_404_NOT_FOUND)
     return Response(serializer.data, status=status.HTTP_200_OK)
     
+@api_view(['PUT', 'PATCH'])
+def atualizar_postagem(request, post_id):
+    """ Fluxo: ATUALIZAR POST """
 
-    
+    # Verifica se o token de autenticação foi fornecido
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    token = auth_header.split(' ')[1]
+
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        usuario_id = payload.get('usuario_id')
+        usuario = Usuario.objects.get(id=usuario_id)
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
+        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Verifica se a postagem existe e pertence ao usuário
+    try:
+        postagem = PostSentimento.objects.get(id=post_id, usuario_id=usuario_id) # Garante que o usuário só possa atualizar suas próprias postagens
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ListarPostSentimentoSerializer(postagem, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            'mensagem': 'Postagem atualizada com sucesso.',
+            'post': serializer.data
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
