@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import PostSentimento
 
-# Serializer para o frontend criar um post com texto e GIF
-class CriaPostSentimentoSerializer(serializers.ModelSerializer):
+# Serializer para o frontend listar posts com texto e GIF
+class ListarPostSentimentoSerializer(serializers.ModelSerializer):
     usuario_nome = serializers.ReadOnlyField(source='usuario.nome', read_only=True)  # Exibe o nome do usuário no frontend
     usuario_username = serializers.ReadOnlyField(source='usuario.username', read_only=True)  # Exibe o username do usuário no frontend
     # usuario_foto = serializers.ImageField(source='usuario.foto', read_only=True)  # Exibe a foto do usuário no frontend AGUARDANDO PERFIL DE USUARIO PARA USO...
@@ -16,8 +16,19 @@ class CriaPostSentimentoSerializer(serializers.ModelSerializer):
             'texto_sentimento',
             'gif_url',
             'data_criacao',
-        ]  # Campos que serão enviados para o frontend
+        ] 
+        read_only_fields = ['data_criacao']  # Campos somente leitura (não podem ser editados pelo frontend)
 
+
+# Serializer para o frontend criar um post com texto e GIF
+class CriarPostSentimentoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostSentimento
+        fields = [
+            'texto_sentimento',
+            'gif_url',
+        ]
+        
         extra_kwargs = {
             'texto_sentimento': {'required': True, 'allow_blank': False}, # Campo obrigatório
             'gif_url': {'required': False, 'allow_blank': True}, # Campo opcional
