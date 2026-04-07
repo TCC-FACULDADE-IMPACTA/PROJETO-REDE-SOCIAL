@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from api_usuario.models import Usuario, Credencial
-from .serializers import CriaPostSentimentoSerializer
+from .serializers import CriarPostSentimentoSerializer, ListarPostSentimentoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import PostSentimento
@@ -79,8 +79,8 @@ def criar_post(request):
         usuario = Usuario.objects.get(id=usuario_id)
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
         return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    serializer = CriaPostSentimentoSerializer(data=request.data)
+
+    serializer = CriarPostSentimentoSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(usuario=usuario)  # Associa o post ao usuário autenticado 
         return Response({
@@ -117,24 +117,28 @@ def deletar_postagem(request, post_id):
     except PostSentimento.DoesNotExist:
         return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
     
-    @api_view(['GET'])
-    def listar_postagens(request):
-        """ Fluxo: LISTAR POSTS NO FEED """
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(['GET'])
+def listar_postagens(request):
+    """ Fluxo: LISTAR POSTS NO FEED """
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        token = auth_header.split(' ')[1]
+    token = auth_header.split(' ')[1]
 
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            usuario_id = payload.get('usuario_id')
-            usuario = Usuario.objects.get(id=usuario_id)
-        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
-            return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        usuario_id = payload.get('usuario_id')
+        usuario = Usuario.objects.get(id=usuario_id)
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
+        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Obtém todas as postagens
-        posts = PostSentimento.objects.all().order_by('-data_criacao')
-        serializer = PostSentimentoSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # Obtém todas as postagens
+    posts = PostSentimento.objects.all().order_by('-data_criacao')
+    serializer = ListarPostSentimentoSerializer(posts, many=True)
+    if not posts.exists():
+        return Response({'mensagem': 'Nenhuma postagem encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
     
