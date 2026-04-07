@@ -151,7 +151,7 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ├── manage.py             # CLI do Django
 └── requirements.txt      # Bibliotecas necessárias
 ```
-8.🤝 Diagramas de atividades e banco
+## 8.🤝 Diagramas de atividades e banco
 Diagramas que demonstram comportamentos dinâmicos do sistema e os processos de negócios.
 
 Funcionalidade Cadastro/Login:
@@ -162,14 +162,15 @@ Banco:
 
 <img width="1408" height="768" alt="Gemini_Generated_Image_3tn08n3tn08n3tn0" src="https://github.com/user-attachments/assets/24df5289-e56f-49d6-a380-de9e43e7b990" />
 
-9.📜 Licença
+## 9.📜 Licença
 Distribuído sob a licença [MIT/Apache/GPL]. Veja LICENSE para mais informações.
 
-10.🧪 Como rodar os testes
+## 10.🧪 Como rodar os testes
 Para executar a suíte de testes automatizados da API (como a verificação de comunicação com os servidores do Giphy), utilize o comando na raiz do backend:
 
 Bash
 pytest -v
 (A flag -v ativa o modo verboso, detalhando melhor a conclusão de cada teste).
 
-Desenvolvido por grupo: MOOD - LucasOliveira1995, GuilhermeTyper, nosferavic, Debora001-jpg, maxalexandre15, BMuramoto, GUILHERME-GTS.
+
+## Desenvolvido por grupo: MOOD - LucasOliveira1995, GuilhermeTyper, nosferavic, Debora001-jpg, maxalexandre15, BMuramoto, GUILHERME-GTS.
