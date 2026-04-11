@@ -165,7 +165,7 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ├── client/               # FRond-end da aplicação
 │   ├── imagens/          # Imagens usadas no frond end(ex: icon)
 │   ├── services/         # Organização da regra de negócio
-        └── api.js        # Criador de instacias para o Axios
+|       └── api.js        # Criador de instacias para o Axios
 │   ├── sign-up/          # Funcionalidade de cadastramento
 ├── manage.py             # CLI do Django
 ├── tests/                # Testes relacionado a aplicação
@@ -181,7 +181,7 @@ Diagrama de Atividade Cadastro/Login:
 <img width="1508" height="654" alt="CADASTRO_DO_SISTEMA drawio" src="https://github.com/user-attachments/assets/cbde008c-2b72-484d-969d-28955521b9ee" />
 
 
-Diagrama de Atividade Postagem de menssagem:
+Diagrama de Atividade Postagem de mensagens:
 
 <img width="1380" height="752" alt="funcionalidade2DA" src="https://github.com/user-attachments/assets/2101daf2-be0c-4783-b4e8-8d3feca139d1" />
 
