@@ -48,10 +48,13 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 A rede social foi construída com o seguinte stack tecnológico:
 
 **Front-end:**
-* A DEFINIR
+* React
+* Html
+* Css
+* JavaScript (Vanilla)
 
 **Back-end:**
-* Python / Django
+* Python (Django)
 * Node.js
 * Express.js
   
@@ -65,6 +68,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 * Axios
 * Vite
 * DJANGO RESTFRAMEWORK
+* JWT
 
 ---
 
@@ -128,6 +132,10 @@ Antes de começar, você precisará ter instalado em sua máquina:
 | **GET** | `/admin/` | Painel de controle administrativo do Django. |
 | **GET** | `/api/perfil/` | Retorna o Perfil do usuario (REQUER TOKEN) |
 | **GET** | `/api/buscar_gifs/` | Busca GIFs na API externa (Giphy) |
+| **POST** | `/api/criar_post/` | Cria a postagem do usuario |
+| **DELETE** | `/api/deletar_postagem/<int:post_id>/` | Deleta a postagem do usuario(Requer ID da postagem) |
+| **GET** | `/api/listar_postagem/` | Retona todas as postagem dos usuários no banco |
+| **PUT/PATCH** | `/api/atualizar_postagem/<int:post_id>/` | Atualiza as postagem do usuário (Requer ID da postagem) |
 
 ---
 
@@ -153,9 +161,15 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 │   ├── models.py         # Definição das tabelas (DER)
 │   ├── views.py          # Regras de negócio (Fluxograma)
 │   └── urls.py           # Rotas da API
+├── client/               # FRond-end da aplicação
+│   ├── imagens/          # Imagens usadas no frond end(ex: icon)
+│   ├── services/         # Organização da regra de negócio
+        └── api.js        # Criador de instacias para o Axios
+│   ├── sign-up/          # Funcionalidade de cadastramento
 ├── manage.py             # CLI do Django
 ├── tests/                # Testes relacionado a aplicação
 |   └── test_settings.py  # Testes de configurações
+├── setup                 # configurações da aplicação em Geral
 └── requirements.txt      # Bibliotecas necessárias
 ```
 ## 8.🤝 Diagramas de atividades e banco
