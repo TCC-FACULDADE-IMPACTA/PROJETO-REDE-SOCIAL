@@ -143,12 +143,19 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ## 7.📂 Estrutura de Pastas
 ``` text
 ├── PROJETO-REDE-SOCIAL/  # Configurações do Django
+├── api_postagem/
+│   ├── migrations/       # Histórico do banco de dados
+│   ├── models.py         # Definição das tabelas (DER)
+│   ├── views.py          # Regras de negócio (Fluxograma)
+│   └── urls.py           # Rotas da API
 ├── api_usuarios/         # App principal (Lógica do sistema)
 │   ├── migrations/       # Histórico do banco de dados
 │   ├── models.py         # Definição das tabelas (DER)
 │   ├── views.py          # Regras de negócio (Fluxograma)
 │   └── urls.py           # Rotas da API
 ├── manage.py             # CLI do Django
+├── tests/                # Testes relacionado a aplicação
+|   └── test_settings.py  # Testes de configurações
 └── requirements.txt      # Bibliotecas necessárias
 ```
 ## 8.🤝 Diagramas de atividades e banco
@@ -166,11 +173,16 @@ Banco:
 Distribuído sob a licença [MIT/Apache/GPL]. Veja LICENSE para mais informações.
 
 ## 10.🧪 Como rodar os testes
-Para executar a suíte de testes automatizados da API (como a verificação de comunicação com os servidores do Giphy), utilize o comando na raiz do backend:
+Executar todos os testes (como a verificação de comunicação com os servidores do Giphy)
+```
+# No diretório raiz do projeto
+python -m pytest
 
-Bash
-pytest -v
-(A flag -v ativa o modo verboso, detalhando melhor a conclusão de cada teste).
+# Com saída detalhada
+python -m pytest -v
 
+# Com cobertura
+python -m pytest --cov=src --cov-report=term-missing 
+```
 
-## Desenvolvido por grupo: MOOD - LucasOliveira1995, GuilhermeTyper, nosferavic, Debora001-jpg, maxalexandre15, BMuramoto, GUILHERME-GTS.
+Desenvolvido por grupo: MOOD - LucasOliveira1995, GuilhermeTyper, nosferavic, Debora001-jpg, maxalexandre15, BMuramoto, GUILHERME-GTS.
