@@ -69,6 +69,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 * Vite
 * DJANGO RESTFRAMEWORK
 * JWT
+* Pytest
 
 ---
 
@@ -175,13 +176,19 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ## 8.🤝 Diagramas de atividades e banco
 Diagramas que demonstram comportamentos dinâmicos do sistema e os processos de negócios.
 
-Funcionalidade Cadastro/Login:
+Diagrama de Atividade Cadastro/Login:
 
 <img width="1508" height="654" alt="CADASTRO_DO_SISTEMA drawio" src="https://github.com/user-attachments/assets/cbde008c-2b72-484d-969d-28955521b9ee" />
 
+
+Diagrama de Atividade Postagem de menssagem:
+
+<img width="1380" height="752" alt="funcionalidade2DA" src="https://github.com/user-attachments/assets/2101daf2-be0c-4783-b4e8-8d3feca139d1" />
+
 Banco:
 
-<img width="1408" height="768" alt="Gemini_Generated_Image_3tn08n3tn08n3tn0" src="https://github.com/user-attachments/assets/24df5289-e56f-49d6-a380-de9e43e7b990" />
+<img width="1380" height="752" alt="Gemini_Generated_Image_nspvc3nspvc3nspv" src="https://github.com/user-attachments/assets/90d198c9-8aae-479a-9335-5b403f6878db" />
+
 
 ## 9.📜 Licença
 Distribuído sob a licença [MIT/Apache/GPL]. Veja LICENSE para mais informações.
