@@ -143,10 +143,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
 ## 6.📊 Estrutura do Banco de Dados
 O modelo de dados é baseado em um grafo social, focado em interações:
 
-* **Users:** ID, Nome, Email, Senha, Foto, Bio.
-* **Posts:** ID, UserID, Conteúdo, FotoURL, Timestamp.
-* **Follows/Friends:** FollowerID, FollowingID, Data.
-* **Likes/Comments:** ID, PostID, UserID, Conteúdo.
+<img width="1380" height="752" alt="Gemini_Generated_Image_nspvc3nspvc3nspv" src="https://github.com/user-attachments/assets/90d198c9-8aae-479a-9335-5b403f6878db" />
 
 ---
 ## 7.📂 Estrutura de Pastas
@@ -173,7 +170,7 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ├── setup                 # configurações da aplicação em Geral
 └── requirements.txt      # Bibliotecas necessárias
 ```
-## 8.🤝 Diagramas de atividades e banco
+## 8.🤝 Diagramas de atividades
 Diagramas que demonstram comportamentos dinâmicos do sistema e os processos de negócios.
 
 Diagrama de Atividade Cadastro/Login:
@@ -184,10 +181,6 @@ Diagrama de Atividade Cadastro/Login:
 Diagrama de Atividade Postagem de mensagens:
 
 <img width="1380" height="752" alt="funcionalidade2DA" src="https://github.com/user-attachments/assets/2101daf2-be0c-4783-b4e8-8d3feca139d1" />
-
-Banco:
-
-<img width="1380" height="752" alt="Gemini_Generated_Image_nspvc3nspvc3nspv" src="https://github.com/user-attachments/assets/90d198c9-8aae-479a-9335-5b403f6878db" />
 
 
 ## 9.📜 Licença
