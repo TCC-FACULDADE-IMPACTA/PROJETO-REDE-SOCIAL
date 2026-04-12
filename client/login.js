@@ -105,7 +105,7 @@ if (loginForm) {
       localStorage.setItem('token', response.data.token);
 
       alert("✅ Login realizado com sucesso!");
-      window.location.href = "/pages/bem_vindo/home.html";
+      window.location.href = "/pages/bem_vindo/bem_vindo.html";
 
     } catch (error) {
       console.error("Erro detalhado da API:", error.response?.data);
