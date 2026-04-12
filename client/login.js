@@ -1,4 +1,4 @@
-import api from './services/api.js';
+import api from '/services/api.js';
 
 // =============================
 // MOSTRAR / OCULTAR SENHA
@@ -105,8 +105,8 @@ if (loginForm) {
       localStorage.setItem('token', response.data.token);
 
       alert("✅ Login realizado com sucesso!");
-      window.location.href = "home.html";
-      
+      window.location.href = "/pages/bem_vindo/home.html";
+
     } catch (error) {
       console.error("Erro detalhado da API:", error.response?.data);
       
