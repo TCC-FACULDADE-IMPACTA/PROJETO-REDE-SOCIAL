@@ -86,7 +86,8 @@ def efetuar_login(request):
     
         return Response({
             'mensagem': 'Login efetuado com sucesso!',
-            'token': token
+            'token': token,
+            'user_id': credencial.usuario.id
         }, status=status.HTTP_200_OK)
 
     # FALHA NA AUTENTICAÇÃO

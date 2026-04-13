@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentimentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="../../assets/imagens/LOGO-ICO.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+    <link rel="stylesheet" href="postagem.css">
+</head>
+<body class="bg-fixed min-h-screen signature-gradient font-body text-on-surface">
+    <!-- TopAppBar -->
+    <header class="bg-white/80 backdrop-blur-xl fixed top-0 w-full z-50 shadow-[0px_20px_40px_rgba(57,43,83,0.08)]">
+        <div class="flex justify-between items-center px-6 py-4 max-w-2xl mx-auto">
+            <span class="flex items-center">
+                <img src="../../assets/imagens/MOOD-LGO.png" alt="Logo" class="h-8">
+            </span>
+            <div class="flex items-center gap-4">
+                <button class="text-slate-500 hover:opacity-80 transition-opacity">
+                    <span class="material-symbols-outlined">account_circle</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-32 px-4 max-w-2xl mx-auto space-y-6">
+        <section class="bg-white rounded-2xl p-6 shadow-[0px_20px_40px_rgba(57,43,83,0.08)]">
+            <h2 id="form-title" class="text-slate-500 font-semibold text-sm mb-4 uppercase tracking-wider">Compartilhe um sentimento</h2>
+            <div class="bg-slate-50 rounded-2xl p-4 mb-4 border border-transparent focus-within:border-violet-200 transition-all">
+                <textarea id="feeling-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder-slate-400 resize-none h-24 text-lg font-medium" placeholder="Como você está se sentindo hoje?"></textarea>
+                
+                <div id="gif-preview-container" class="hidden relative mt-2 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                    <img id="gif-preview-img" src="" class="w-full h-auto block">
+                    <button id="remove-gif-btn" class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 hover:bg-black transition-colors">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                        <span class="material-symbols-outlined text-xl">gif</span>
+                        <span class="text-sm font-medium">Adicionar GIF</span>
+                    </button>
+                    <button class="p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                        <span class="material-symbols-outlined">mood</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button id="cancel-edit-btn" class="hidden text-slate-400 hover:text-slate-600 font-medium px-4 py-2 transition-all">
+                        Cancelar
+                    </button>
+                <button id="send-btn" class="signature-gradient text-white px-8 py-2.5 rounded-full font-bold shadow-lg active:scale-95 transition-all">
+                    Enviar
+                </button>
+            </div>
+        </section>
+
+        <!-- Feed List -->
+        <div id="feed" class="space-y-6">
+            <!-- Posts will be injected here -->
+        </div>
+    </main>
+
+    <!-- BottomNavBar -->
+    <nav class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4">
+        <div class="bg-white/80 backdrop-blur-xl w-full max-w-md rounded-full shadow-[0px_20px_40px_rgba(57,43,83,0.12)] flex justify-around items-center p-2">
+            <button class="nav-btn active">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                <span class="nav-label">Sentimentos</span>
+            </button>
+            <button class="nav-btn">
+                <span class="material-symbols-outlined">search</span>
+                <span class="nav-label">Buscar</span>
+            </button>
+            <button class="nav-btn">
+                <span class="material-symbols-outlined">auto_awesome</span>
+                <span class="nav-label">Humores</span>
+            </button>
+            <button class="nav-btn">
+                <span class="material-symbols-outlined">person</span>
+                <span class="nav-label">Perfil</span>
+            </button>
+        </div>
+    </nav>
+<div id="gif-modal" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-bold text-slate-900 text-lg">Buscar GIF</h3>
+            <button id="close-modal" class="text-slate-400 hover:text-slate-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-4">
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="gif-search-input" placeholder="Ex: feliz, animado..." 
+                    class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-violet-500">
+                <button id="gif-search-btn" class="bg-violet-600 text-white p-2 rounded-xl">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
+            <div id="gif-results" class="grid grid-cols-2 gap-2 h-80 overflow-y-auto pr-2 custom-scrollbar">
+                <p class="col-span-2 text-center text-slate-400 py-10">Busque algo acima...</p>
+            </div>
+        </div>
+    </div>
+</div>
+    <script type="module" src="postagem.js"></script>
+</body>
+</html>
