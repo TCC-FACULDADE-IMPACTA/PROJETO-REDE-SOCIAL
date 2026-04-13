@@ -104,8 +104,12 @@ if (loginForm) {
       // Salva o token JWT retornado pelo Django
       localStorage.setItem('token', response.data.token);
 
+      if (response.data.user_id) {
+        localStorage.setItem('usuario_id', response.data.user_id);
+      }
+
       alert("✅ Login realizado com sucesso!");
-      window.location.href = "/pages/bem_vindo/bem_vindo.html";
+      window.location.href = "/pages/postagens/postagem.html";
 
     } catch (error) {
       console.error("Erro detalhado da API:", error.response?.data);

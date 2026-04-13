@@ -11,6 +11,7 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
         model = PostSentimento
         fields = [
             'id', # ID do post
+            'usuario',
             'usuario_nome',
             'usuario_username',
             'texto_sentimento',
