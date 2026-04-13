@@ -48,7 +48,6 @@ Este projeto é um MVP (Minimum Viable Product) focado em:
 A rede social foi construída com o seguinte stack tecnológico:
 
 **Front-end:**
-* React
 * Html
 * Css
 * JavaScript (Vanilla)
