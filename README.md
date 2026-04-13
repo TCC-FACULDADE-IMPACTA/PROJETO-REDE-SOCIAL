@@ -57,6 +57,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 * Node.js
 * Express.js
   
+  
 
 **Banco de Dados:**
 * PostgreSQL 
@@ -95,11 +96,23 @@ Antes de começar, você precisará ter instalado em sua máquina:
 3.  **Configure as variáveis de ambiente (.env):**
     * Crie um arquivo `.env` na raiz do backend baseado no `.env.example`.
     * **IMPORTANTE:** Para a integração de GIFs funcionar, adicione sua chave da API do Giphy no arquivo `.env`:
-        `GIPHY_API_KEY=sua_chave_aqui`
+`GIPHY_API_KEY=sua_chave_aqui`.
+Ela pode ser gerada através do:
+```bash
+ https://developers.giphy.com/dashboard/
+```
+
+Coloque o GEMINI_API_KEY no `.env.local` dentro da pasta client, para sua chave Gemini API que poder ser gerada através do:
+```bash
+https://aistudio.google.com/api-keys
+```
+
 
 4.  **Instale as dependências:**
     ```bash
+    # Na raiz do projeto 
     pip install -r requirements.txt
+    # Dentro da pasta client
     npm install 
     ```
 
