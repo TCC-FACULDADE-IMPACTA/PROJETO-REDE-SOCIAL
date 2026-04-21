@@ -1,10 +1,8 @@
 from deep_translator import GoogleTranslator
-import jwt
 import requests
 from django.conf import settings
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from api_usuario.models import Usuario, Credencial
+from rest_framework.decorators import api_view
+from utils.autenticacao import token_obrigatorio
 from .serializers import CriarPostSentimentoSerializer, ListarPostSentimentoSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,6 +11,7 @@ from .models import PostSentimento
 
 
 @api_view(['GET'])
+@token_obrigatorio
 def buscar_gifs(request):
     """ Fluxo: BUSCAR GIFS NO GIPHY (PUBLICO OU AUTENTICADO) """
 
@@ -62,24 +61,14 @@ def buscar_gifs(request):
         return Response({'erro': f'Não foi possível conectar ao serviço de Giphy: {str(e)}'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
     
 
+
+
 @api_view(['POST'])
+@token_obrigatorio
 def criar_post(request):
     """ Fluxo: CRIAR POST COM GIF """
 
-    # Verifica se o token de autenticação foi fornecido
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    token = auth_header.split(' ')[1]
-
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        usuario_id = payload.get('usuario_id')
-        usuario = Usuario.objects.get(id=usuario_id)
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
-        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
-
+    usuario = request.user_autenticado  # Obtém o usuário autenticado do decorador
     serializer = CriarPostSentimentoSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(usuario=usuario)  # Associa o post ao usuário autenticado 
@@ -89,25 +78,16 @@ def criar_post(request):
         }, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+
 
 @api_view(['DELETE'])
+@token_obrigatorio
 def deletar_postagem(request, post_id):
     """ Fluxo: DELETAR POST """
 
-    # Verifica se o token de autenticação foi fornecido
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    token = auth_header.split(' ')[1]
-
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        usuario_id = payload.get('usuario_id')
-        usuario = Usuario.objects.get(id=usuario_id)
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
-        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+    usuario = request.user_autenticado
 
         # Verifica se a postagem existe e pertence ao usuário
     try:
@@ -116,22 +96,15 @@ def deletar_postagem(request, post_id):
         return Response({'mensagem': 'Postagem deletada com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
     except PostSentimento.DoesNotExist:
         return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
+
 @api_view(['GET'])
+@token_obrigatorio
 def listar_postagens(request):
     """ Fluxo: LISTAR POSTS NO FEED """
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    token = auth_header.split(' ')[1]
-
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        usuario_id = payload.get('usuario_id')
-        usuario = Usuario.objects.get(id=usuario_id)
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
-        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+    usuario = request.user_autenticado
 
     # Obtém todas as postagens
     posts = PostSentimento.objects.all().order_by('-data_criacao')
@@ -139,28 +112,19 @@ def listar_postagens(request):
     if not posts.exists():
         return Response({'mensagem': 'Nenhuma postagem encontrada.'}, status=status.HTTP_404_NOT_FOUND)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     
 @api_view(['PUT', 'PATCH'])
+@token_obrigatorio
 def atualizar_postagem(request, post_id):
     """ Fluxo: ATUALIZAR POST """
 
-    # Verifica se o token de autenticação foi fornecido
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return Response({'erro': 'Token não fornecido.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    token = auth_header.split(' ')[1]
-
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        usuario_id = payload.get('usuario_id')
-        usuario = Usuario.objects.get(id=usuario_id)
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, Usuario.DoesNotExist):
-        return Response({'erro': 'Token inválido ou expirado.'}, status=status.HTTP_401_UNAUTHORIZED)
+    usuario = request.user_autenticado
 
     # Verifica se a postagem existe e pertence ao usuário
     try:
-        postagem = PostSentimento.objects.get(id=post_id, usuario_id=usuario_id) # Garante que o usuário só possa atualizar suas próprias postagens
+        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario) # Garante que o usuário só possa atualizar suas próprias postagens
     except PostSentimento.DoesNotExist:
         return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
 
