@@ -7,6 +7,7 @@ class Usuario(models.Model):
     foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
     username = models.CharField(max_length=150, unique=True)
     nascimento = models.DateField()
+    bio = models.TextField(max_length=500, null=True, blank=True)
 
     class Meta:
         db_table = 'usuarios' # Força o nome da tabela no banco
