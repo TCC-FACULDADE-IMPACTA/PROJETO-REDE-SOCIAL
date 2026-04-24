@@ -48,9 +48,18 @@ class LoginSerializer(serializers.Serializer):
 
 # SERIALIZER PARA EXIBIR O PERFIL DO USUÁRIO (SEM DADOS SENSÍVEIS)
 class PerfilSerializer(serializers.ModelSerializer):
+    stats = serializers.SerializerMethodField()
+
     class Meta:
         model = Usuario
-        fields = ['id', 'nome', 'username', 'nascimento', 'foto']
+        fields = ['id', 'nome', 'username', 'bio', 'nascimento', 'foto', 'stats']
+
+    def get_stats(self, obj):
+        return {
+            "postagens": 42,
+            "seguindo": 1250,
+            "seguidores": 108
+        }
 
 class FotoPerfilSerializer(serializers.ModelSerializer):
     class Meta:

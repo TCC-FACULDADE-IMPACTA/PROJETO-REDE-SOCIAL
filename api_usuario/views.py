@@ -103,7 +103,7 @@ def efetuar_login(request):
 def ver_perfil(request):
     """ Fluxo: VER PERFIL DO USUÁRIO """
 
-    usuario = request.usuario
+    usuario = request.user_autenticado
 
     # SE O USUÁRIO FOR ENCONTRADO, RETORNA OS DADOS DO PERFIL
     serializer = PerfilSerializer(usuario)
@@ -115,7 +115,7 @@ def ver_perfil(request):
 def upload_foto(request):
     """ Fluxo: UPLOAD DE FOTO DE PERFIL """
 
-    usuario = request.usuario
+    usuario = request.user_autenticado
 
     # VERIFICA SE O ARQUIVO 'foto' ESTÁ PRESENTE NOS FILES ENVIADOS
     if 'foto' not in request.FILES:
