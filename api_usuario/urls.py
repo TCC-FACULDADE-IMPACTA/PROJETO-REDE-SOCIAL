@@ -8,5 +8,5 @@ urlpatterns = [
     path('api/login/', views.efetuar_login, name='login'),
     path('api/perfil/', views.ver_perfil, name='ver_perfil'),
     path('api/upload_foto/', views.upload_foto, name='upload_foto'),
-    path('api/listar_postagens/', views.listar_postagens_usuario, name='listar_postagens_usuario'),
+    path('api/listar_postagens_usuario/', views.listar_postagens_usuario, name='listar_postagens_usuario'),
 ]
