@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 import jwt
 from rest_framework.parsers import MultiPartParser, FormParser
 from utils.autenticacao import token_obrigatorio
+from api_postagem.serializers import ListarPostSentimentoSerializer
 
 # SE O MÉTODO FOR POST, PROCESSA O CADASTRO
 @api_view(['POST'])
@@ -109,6 +110,24 @@ def ver_perfil(request):
     serializer = PerfilSerializer(usuario)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# FLUXO: LISTAR POSTAGENS DO USUÁRIO
+@api_view(['GET'])
+@token_obrigatorio
+def listar_postagens_usuario(request):
+    """ Fluxo: LISTAR POSTAGENS DO USUÁRIO """
+
+    usuario = request.user_autenticado
+    postagens = ListarPostSentimentoSerializer.objects.filter(usuario=usuario).order_by('-data_criacao')
+    if not postagens.exists():
+        return Response({'mensagem': 'Nenhuma postagem encontrada para este usuário.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # SERIALIZA AS POSTAGENS ENCONTRADAS
+    serializer = ListarPostSentimentoSerializer(postagens, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# FLUXO: UPLOAD DE FOTO DE PERFIL
 @api_view(['POST'])
 @token_obrigatorio
 @parser_classes([MultiPartParser, FormParser])
