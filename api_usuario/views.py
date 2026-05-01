@@ -111,22 +111,6 @@ def ver_perfil(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# FLUXO: LISTAR POSTAGENS DO USUÁRIO
-@api_view(['GET'])
-@token_obrigatorio
-def listar_postagens_usuario(request):
-    """ Fluxo: LISTAR POSTAGENS DO USUÁRIO """
-
-    usuario = request.user_autenticado
-    postagens = ListarPostSentimentoSerializer.objects.filter(usuario=usuario).order_by('-data_criacao')
-    if not postagens.exists():
-        return Response({'mensagem': 'Nenhuma postagem encontrada para este usuário.'}, status=status.HTTP_404_NOT_FOUND)
-
-    # SERIALIZA AS POSTAGENS ENCONTRADAS
-    serializer = ListarPostSentimentoSerializer(postagens, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 # FLUXO: UPLOAD DE FOTO DE PERFIL
 @api_view(['POST'])
 @token_obrigatorio

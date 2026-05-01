@@ -9,7 +9,7 @@ from rest_framework import status
 from .models import PostSentimento
 
 
-
+# FLUXO: BUSCAR GIFS
 @api_view(['GET'])
 @token_obrigatorio
 def buscar_gifs(request):
@@ -62,7 +62,7 @@ def buscar_gifs(request):
     
 
 
-
+# FLUXO: CRIAR POSTAGEM
 @api_view(['POST'])
 @token_obrigatorio
 def criar_post(request):
@@ -81,15 +81,14 @@ def criar_post(request):
 
 
 
-
+# FLUXO: DELETAR POSTAGEM
 @api_view(['DELETE'])
 @token_obrigatorio
 def deletar_postagem(request, post_id):
     """ Fluxo: DELETAR POST """
 
     usuario = request.user_autenticado
-
-        # Verifica se a postagem existe e pertence ao usuário
+    # Verifica se a postagem existe e pertence ao usuário
     try:
         postagem = PostSentimento.objects.get(id=post_id, usuario=usuario) # Garante que o usuário só possa deletar suas próprias postagens
         postagem.delete()
@@ -99,13 +98,13 @@ def deletar_postagem(request, post_id):
 
 
 
+# FLUXO: LISTAR POSTAGENS
 @api_view(['GET'])
 @token_obrigatorio
 def listar_postagens(request):
     """ Fluxo: LISTAR POSTS NO FEED """
 
     usuario = request.user_autenticado
-
     # Obtém todas as postagens
     posts = PostSentimento.objects.all().order_by('-data_criacao')
     serializer = ListarPostSentimentoSerializer(posts, many=True)
@@ -114,7 +113,25 @@ def listar_postagens(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-    
+
+# FLUXO: LISTAR POSTAGENS DO USUÁRIO
+@api_view(['GET'])
+@token_obrigatorio
+def listar_postagens_usuario(request):
+    """ Fluxo: LISTAR POSTAGENS DO USUÁRIO """
+
+    usuario = request.user_autenticado
+    postagens_banco = PostSentimento.objects.filter(usuario=usuario).order_by('-data_criacao')
+    if not postagens_banco.exists():
+        return Response({'mensagem': 'Nenhuma postagem encontrada para este usuário.'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True)
+
+    # SERIALIZA AS POSTAGENS ENCONTRADAS
+    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# FLUXO: ATUALIZAR POSTAGEM
 @api_view(['PUT', 'PATCH'])
 @token_obrigatorio
 def atualizar_postagem(request, post_id):

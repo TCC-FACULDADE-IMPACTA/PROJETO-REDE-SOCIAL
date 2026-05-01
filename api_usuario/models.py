@@ -25,3 +25,4 @@ class Credencial(models.Model):
 
     def __str__(self): # Representação em string do objeto
         return self.email
+    
