@@ -3,10 +3,10 @@ import requests
 from django.conf import settings
 from rest_framework.decorators import api_view
 from utils.autenticacao import token_obrigatorio
-from .serializers import CriarPostSentimentoSerializer, ListarPostSentimentoSerializer
+from .serializers import CriarPostSentimentoSerializer, ListarPostSentimentoSerializer, REACOES_MAPA
 from rest_framework.response import Response
 from rest_framework import status
-from .models import PostSentimento
+from .models import PostSentimento, Reacao
 
 
 # FLUXO: BUSCAR GIFS
@@ -124,10 +124,9 @@ def listar_postagens_usuario(request):
     postagens_banco = PostSentimento.objects.filter(usuario=usuario).order_by('-data_criacao')
     if not postagens_banco.exists():
         return Response({'mensagem': 'Nenhuma postagem encontrada para este usuário.'}, status=status.HTTP_404_NOT_FOUND)
-    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True)
 
     # SERIALIZA AS POSTAGENS ENCONTRADAS
-    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True)
+    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -154,3 +153,33 @@ def atualizar_postagem(request, post_id):
         }, status=status.HTTP_200_OK)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# FLUXO: GERENCIAR REAÇÃO
+@api_view(['POST'])
+@token_obrigatorio
+def gerenciar_reacao(request, post_id):
+    usuario = request.user_autenticado
+    tipo_escolhido = request.data.get('reacao_tipo') # Front-end envia 'curtir', 'amei', etc.
+    
+    emoji_icon = REACOES_MAPA.get(tipo_escolhido)
+    if not emoji_icon:
+        return Response({'erro': 'Reação inválida'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        post = PostSentimento.objects.get(id=post_id)
+        reacao_existente = Reacao.objects.filter(usuario=usuario, postagem=post).first()
+
+        if reacao_existente:
+            if reacao_existente.reacao_tipo == emoji_icon:
+                reacao_existente.delete()
+                return Response({'status': 'removida'}, status=status.HTTP_200_OK)
+            else:
+                reacao_existente.reacao_tipo = emoji_icon
+                reacao_existente.save()
+                return Response({'status': 'atualizada'}, status=status.HTTP_200_OK)
+        
+        Reacao.objects.create(usuario=usuario, postagem=post, reacao_tipo=emoji_icon)
+        return Response({'status': 'criada'}, status=status.HTTP_201_CREATED)
+
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada'}, status=404)
