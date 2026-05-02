@@ -23,3 +23,6 @@ class Reacao(models.Model):
     class Meta:
         db_table = 'reacoes' # Força o nome da tabela no banco
         unique_together = ('usuario', 'postagem') # Garante que um usuário não reaja mais de uma vez à mesma postagem
+
+        def __str__(self):
+            return f"{self.usuario.username} - {self.reacao_tipo} - {self.postagem.id}"
