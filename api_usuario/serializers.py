@@ -1,7 +1,19 @@
 from rest_framework import serializers
 from .models import Usuario, Credencial
 from datetime import date
+import base64
 
+# FUNÇÃO AUXILIAR PARA CONVERTER BINÁRIO (BYTEA) PARA BASE64
+def converter_foto_para_base64(instancia_foto):
+    if instancia_foto:
+        try:
+            # Converte o memoryview do Postgres para bytes e depois para string Base64
+            foto_bytes = bytes(instancia_foto)
+            foto_base64 = base64.b64encode(foto_bytes).decode('utf-8')
+            return f"data:image/jpeg;base64,{foto_base64}"
+        except Exception:
+            return None
+    return None
 
 # SERIALIZERS PARA O CADASTRO DE USUÁRIOS COM VALIDAÇÕES
 class CadastroSerializer(serializers.Serializer):
@@ -60,8 +72,26 @@ class PerfilSerializer(serializers.ModelSerializer):
             "seguindo": 1250,
             "seguidores": 108
         }
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Aplica a conversão para que a foto não venha null ou quebre
+        data['foto'] = converter_foto_para_base64(instance.foto)
+        return data
+
 
 class FotoPerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ['foto']
+        
+
+
+class EditarPerfilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['nome', 'bio', 'foto']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['foto'] = converter_foto_para_base64(instance.foto)
+        return data
