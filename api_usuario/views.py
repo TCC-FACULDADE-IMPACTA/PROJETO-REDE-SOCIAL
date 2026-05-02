@@ -4,13 +4,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, Credencial
-from .serializers import CadastroSerializer, LoginSerializer, PerfilSerializer, FotoPerfilSerializer
+from .serializers import CadastroSerializer, LoginSerializer, PerfilSerializer, FotoPerfilSerializer, EditarPerfilSerializer
 from django.conf import settings
 from datetime import datetime, timedelta, timezone
 import jwt
 from rest_framework.parsers import MultiPartParser, FormParser
 from utils.autenticacao import token_obrigatorio
-from api_postagem.serializers import ListarPostSentimentoSerializer
 
 # SE O MÉTODO FOR POST, PROCESSA O CADASTRO
 @api_view(['POST'])
@@ -136,4 +135,36 @@ def upload_foto(request):
     
     # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: FORMATO DE IMAGEM INVÁLIDO)
     print(f"ERROS DO SERIALIZER: {serializer.errors}")
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# FLUXO: ATUALIZAR PERFIL DO USUÁRIO
+@api_view(['PATCH'])
+@token_obrigatorio
+def atualizar_perfil(request):
+    """ Fluxo: ATUALIZAR PERFIL DO USUÁRIO """
+
+    usuario = request.user_autenticado
+    serializer = EditarPerfilSerializer(usuario, data=request.data, partial=True)
+
+
+    if serializer.is_valid():
+        dados = serializer.validated_data
+        nova_foto = dados.get('foto', None)
+        if nova_foto:
+            usuario.foto = nova_foto.read()  # Converte o arquivo em bytes para o Postgres
+
+        campos_para_atualizar = list(dados.keys())
+        for attr, value in dados.items():
+            setattr(usuario, attr, value)
+
+        if nova_foto:
+            campos_para_atualizar.append('foto')
+
+        usuario.save(update_fields=campos_para_atualizar)
+        return Response({
+            'mensagem': 'Perfil atualizado com sucesso!',
+            'dados': serializer.data
+        }, status=status.HTTP_200_OK)
+
+    # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
