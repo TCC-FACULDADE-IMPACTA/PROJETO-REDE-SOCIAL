@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import PostSentimento, Reacao
 import emoji
+from utils.converter_foto import converter_foto_para_base64
 
 
 REACOES_MAPA = {
@@ -49,6 +50,16 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
             print(f'Usuário logado: {usuario_logado} | Reação: {reacao}') # DEBUG
             return reacao.reacao_tipo if reacao else None
         return None
+
+    # CONVERTE A FOTO DO USUÁRIO PARA BASE64
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.usuario:
+            data['foto'] = converter_foto_para_base64(instance.usuario.foto)
+        else:
+            data['foto'] = None
+
+        return data
 
         read_only_fields = ['data_criacao']  # Campos somente leitura (não podem ser editados pelo frontend)
 

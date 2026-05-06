@@ -151,7 +151,7 @@ def atualizar_perfil(request):
         dados = serializer.validated_data
         nova_foto = dados.get('foto', None)
         if nova_foto:
-            usuario.foto = nova_foto.read()  # Converte o arquivo em bytes para o Postgres
+            usuario.foto = nova_foto.read()
 
         campos_para_atualizar = list(dados.keys())
         for attr, value in dados.items():
