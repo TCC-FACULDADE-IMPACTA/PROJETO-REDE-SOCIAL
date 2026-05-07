@@ -107,7 +107,7 @@ def listar_postagens(request):
     usuario = request.user_autenticado
     # Obtém todas as postagens
     posts = PostSentimento.objects.all().order_by('-data_criacao')
-    serializer = ListarPostSentimentoSerializer(posts, many=True)
+    serializer = ListarPostSentimentoSerializer(posts, many=True, context={'request': request})
     if not posts.exists():
         return Response({'mensagem': 'Nenhuma postagem encontrada.'}, status=status.HTTP_404_NOT_FOUND)
     return Response(serializer.data, status=status.HTTP_200_OK)
