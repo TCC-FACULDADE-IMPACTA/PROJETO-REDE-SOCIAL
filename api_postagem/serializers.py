@@ -19,6 +19,7 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
     usuario_nome = serializers.ReadOnlyField(source='usuario.nome', read_only=True)  # Exibe o nome do usuário no frontend
     usuario_username = serializers.ReadOnlyField(source='usuario.username', read_only=True)  # Exibe o username do usuário no frontend
     usuario_foto = serializers.ImageField(source='usuario.foto', read_only=True)
+    total_reacoes = serializers.SerializerMethodField()  # Campo para exibir o total de reações
     reacoes_resumo = serializers.SerializerMethodField()  # Campo para exibir um resumo das reações
     minha_reacao = serializers.SerializerMethodField()  # Campo para exibir a reação do usuário autenticado
     
@@ -34,6 +35,7 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
             'usuario_foto',
             'data_criacao',
             'reacoes_resumo',
+            'total_reacoes',
             'minha_reacao'
         ]
 
@@ -62,6 +64,9 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
         return data
 
         read_only_fields = ['data_criacao']  # Campos somente leitura (não podem ser editados pelo frontend)
+
+    def get_total_reacoes(self, obj):
+        return obj.reacoes.count()
 
 
 # Serializer para o frontend criar um post com texto e GIF
