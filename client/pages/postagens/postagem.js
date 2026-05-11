@@ -152,6 +152,7 @@ async function carregarFeed() {
         console.log("Meu ID no LocalStorage:", MEU_USUARIO_ID); // Debug: Veja o seu ID
 
         if (posts.length > 0) {
+
             const meuPost = posts.find(p => p.usuario == MEU_USUARIO_ID);
             
             if (meuPost && meuPost.usuario_foto) {
