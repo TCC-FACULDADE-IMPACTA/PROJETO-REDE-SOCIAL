@@ -1,7 +1,10 @@
 # Endpoints
 
-from django.urls import path
+from django.urls import include, path
+
+from setup import settings
 from . import views
+
 
 urlpatterns = [
     path('api/cadastrar/', views.cadastrar_usuario, name='cadastrar'),
