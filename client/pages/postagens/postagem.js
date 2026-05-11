@@ -141,6 +141,22 @@ sendBtn.addEventListener('click', async (e) => {
     }
 });
 
+window.handleReacaoClique = async (postId, tipo) => {
+    try {
+        const response = await api.post(`/api/gerenciar_reacao/${postId}/`, {
+            reacao_tipo: tipo 
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            carregarFeed(); // Atualiza a tela para mostrar o novo emoji e contagem
+        }
+    } catch (error) {
+        console.error("Erro ao salvar reação:", error.response?.data || error);
+    }
+};
+
+window.handleLikeSimples = (postId) => window.handleReacaoClique(postId, 'curtir');
+
 // --- 4. RENDERIZAÇÃO ---
 
 async function carregarFeed() {
@@ -180,43 +196,39 @@ function renderPosts(posts) {
     posts.forEach(post => {
         const ehMeuPost = String(post.usuario) === String(MEU_USUARIO_ID);
         
-        // --- NOVIDADE: Tratamento da Foto do Autor ---
+        // 2. Lógica de Reações (Estilo Facebook)
+        const resumo = post.reacoes_resumo || {};
+        const reacoesAtivas = Object.keys(resumo).filter(tipo => resumo[tipo] > 0);
+        const total = post.total_reacoes || 0;
+
+        // 3. Tratamento da Foto
         const fotoAutor = post.usuario_foto 
             ? (post.usuario_foto.startsWith('http') ? post.usuario_foto : `${BASE_URL}${post.usuario_foto}`)
-            : null;
-
-        // Lógica de Reações (Facebook Style)
-        const resumo = post.reacoes_resumo || {};
-        const total = post.total_reacoes || 0;
-        const reacoesAtivas = Object.keys(resumo).filter(tipo => resumo[tipo] > 0);
+            : 'https://via.placeholder.com/100';
 
         const article = document.createElement('article');
-        article.className = 'bg-white rounded-2xl p-6 shadow-md mb-6 border border-slate-50';
+        article.className = 'bg-white rounded-2xl p-6 shadow-md mb-6 border border-slate-50 post-card';
+        article.setAttribute('data-id', post.id);
 
         article.innerHTML = `
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    ${fotoAutor ? `
-                        <img src="${fotoAutor}" class="w-10 h-10 rounded-full object-cover border border-slate-200">
-                    ` : `
-                        <div class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold uppercase text-xs">
-                            ${post.usuario_nome ? post.usuario_nome.substring(0,2) : "??"}
-                        </div>
-                    `}
+                    <img src="${fotoAutor}" class="w-10 h-10 rounded-full object-cover border border-slate-200">
                     <div>
                         <h3 class="font-bold text-slate-900">${post.usuario_nome}</h3>
-                        <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                        <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleTimeString()}</p>
                     </div>
                 </div>
 
+                <!-- BOTÕES DE EDITAR/DELETAR -->
                 ${ehMeuPost ? `
-                    <div class="flex gap-1">
+                    <div class="flex gap-1" style="pointer-events: auto;">
                         <button onclick="prepararEdicao(${post.id}, '${post.texto_sentimento.replace(/'/g, "\\'")}', '${post.gif_url || ''}')" 
-                                class="text-violet-500 hover:bg-violet-50 p-2 rounded-full transition-colors">
+                                class="text-violet-500 hover:bg-violet-50 p-2 rounded-full transition-colors flex items-center justify-center">
                             <span class="material-symbols-outlined">edit</span>
                         </button>
                         <button onclick="deletarPost(${post.id})" 
-                                class="text-red-400 hover:bg-red-50 p-2 rounded-full transition-colors">
+                                class="text-red-400 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center justify-center">
                             <span class="material-symbols-outlined">delete</span>
                         </button>
                     </div>
@@ -224,21 +236,41 @@ function renderPosts(posts) {
             </div>
 
             <p class="text-slate-800 text-lg mb-4">${post.texto_sentimento}</p>
-            ${post.gif_url ? `<img src="${post.gif_url}" class="w-full h-auto rounded-xl">` : ''}
+            ${post.gif_url ? `<img src="${post.gif_url}" class="w-full h-auto rounded-xl mb-4">` : ''}
 
+            <!-- PILHA DE EMOJIS (FACEBOOK STYLE) -->
             ${total > 0 ? `
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-50">
-                    <div class="flex items-center">
+                <div class="flex items-center gap-2 mb-3 px-1">
+                    <div class="flex -space-x-1.5">
                         ${reacoesAtivas.map((tipo, idx) => `
-                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border-2 border-white text-xl" 
-                                  style="margin-left: ${idx === 0 ? '0' : '-8px'}; z-index: ${10 - idx}">
-                                ${REACOES_MAPA[tipo]}
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white ring-2 ring-white text-sm" 
+                                  style="z-index: ${10 - idx}">
+                                ${REACOES_MAPA[tipo] || '👍'}
                             </span>
                         `).join('')}
                     </div>
-                    <span class="text-sm text-slate-500 font-medium">${total}</span>
+                    <span class="text-sm text-slate-500 font-bold">${total}</span>
                 </div>
             ` : ''}
+
+            <!-- AÇÕES DE REAÇÃO -->
+            <div class="post-actions border-t border-slate-100 pt-3">
+                <div class="reaction-container relative inline-flex">
+                    <div class="reaction-menu">
+                        ${Object.keys(REACOES_MAPA).map(tipo => `
+                            <button type="button" class="reaction-btn" onclick="handleReacaoClique(${post.id}, '${tipo}')">
+                                ${REACOES_MAPA[tipo]}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <button type="button" class="btn-like ${post.minha_reacao ? 'active' : ''} flex items-center gap-2" onclick="handleLikeSimples(${post.id})">
+                        <div class="like-icon-wrapper">
+                            ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<span class="material-symbols-outlined">favorite</span>`}
+                        </div>
+                        <span class="text-sm font-bold">${post.minha_reacao ? 'Reagido' : 'Reagir'}</span>
+                    </button>
+                </div>
+            </div>
         `;
         feedElement.appendChild(article);
     });

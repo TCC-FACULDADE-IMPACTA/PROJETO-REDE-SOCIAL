@@ -49,7 +49,6 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
         if request and hasattr(request, 'user_autenticado'):
             usuario_logado = request.user_autenticado
             reacao = obj.reacoes.filter(usuario=usuario_logado).first()
-            print(f'Usuário logado: {usuario_logado} | Reação: {reacao}') # DEBUG
             return reacao.reacao_tipo if reacao else None
         return None
 
