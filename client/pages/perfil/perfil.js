@@ -87,7 +87,7 @@ function renderizarPosts(posts) {
                     <div class="post-header">
                         <div class="post-user-info">
                             <span class="post-username">${post.usuario_nome}</span>
-                            <span class="post-time">${post.data_criacao.substring(0, 10).split('-').reverse().join('-')}</span>
+                            <span class="post-time">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <button class="post-more"><i data-lucide="more-horizontal"></i></button>
                     </div>

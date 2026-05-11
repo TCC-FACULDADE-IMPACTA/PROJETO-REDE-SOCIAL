@@ -205,7 +205,7 @@ function renderPosts(posts) {
                     `}
                     <div>
                         <h3 class="font-bold text-slate-900">${post.usuario_nome}</h3>
-                        <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleDateString()}</p>
+                        <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                     </div>
                 </div>
 
