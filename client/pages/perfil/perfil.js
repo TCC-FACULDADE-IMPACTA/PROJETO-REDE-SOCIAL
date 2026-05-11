@@ -80,60 +80,40 @@ function renderizarPosts(posts) {
             : 'https://via.placeholder.com/100';
 
         return `
-<article class="post-card mood-glow" data-post-id="${post.id}">
-    <div class="post-header-content">
-        <div class="flex justify-between items-center w-full" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="flex items-center gap-3" style="display: flex; gap: 12px; align-items: center;">
+        <article class="post-card mood-glow" data-post-id="${post.id}">
+            <div class="post-layout">
                 <img src="${fotoAutor}" class="post-avatar">
-                <div class="post-user-info">
-                    <span class="post-username">${post.usuario_nome}</span>
-                    <span class="post-time">• Agora</span>
+                <div class="post-main">
+                    <div class="post-header">
+                        <div class="post-user-info">
+                            <span class="post-username">${post.usuario_nome}</span>
+                            <span class="post-time">• Agora</span>
+                        </div>
+                        <button class="post-more"><i data-lucide="more-horizontal"></i></button>
+                    </div>
+                    <p class="post-content">${post.texto_sentimento}</p>
+                    ${post.gif_url ? `<div class="post-image-container"><img src="${post.gif_url}" class="post-image"></div>` : ''}
+                    
+                    <div class="post-actions">
+                        <div class="reaction-container">
+                            <div class="reaction-menu">
+                                ${Object.keys(REACOES_MAPA).map(tipo => `
+                                    <button class="reaction-btn" onclick="handleReacaoClique(${post.id}, '${tipo}')">
+                                        ${REACOES_MAPA[tipo]}
+                                    </button>
+                                `).join('')}
+                            </div>
+
+                            <button class="btn-like ${post.minha_reacao ? 'active' : ''}" onclick="handleLikeSimples(${post.id})">
+                                ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<i data-lucide="heart"></i>`}
+                                <span class="like-count">${post.total_reacoes || 0}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="post-actions-menu" style="display: flex; gap: 8px;">
-                <button onclick="prepararEdicao(${post.id}, '${post.texto_sentimento.replace(/'/g, "\\'")}', '${post.gif_url || ''}')" 
-                        style="background: none; border: none; color: var(--color-primary); cursor: pointer; padding: 4px;">
-                    <i data-lucide="edit-3" style="width: 18px; height: 18px;"></i>
-                </button>
-                <button onclick="deletarPost(${post.id})" 
-                        style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 4px;">
-                    <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="post-body-text" style="padding: 0.5rem 1.5rem 1rem;">
-        <p class="post-content" style="font-size: 1.25rem; font-weight: 500; line-height: 1.4;">
-            ${post.texto_sentimento}
-        </p>
-    </div>
-
-    ${post.gif_url ? `
-        <div class="post-image-container-full">
-            <img src="${post.gif_url}" class="post-image-square" loading="lazy">
-        </div>
-    ` : ''}
-
-    <div class="post-footer-actions" style="padding: 1rem 1.5rem;">
-        <div class="reaction-container">
-            <div class="reaction-menu">
-                ${Object.keys(REACOES_MAPA).map(tipo => `
-                    <button class="reaction-btn" onclick="handleReacaoClique(${post.id}, '${tipo}')">
-                        ${REACOES_MAPA[tipo]}
-                    </button>
-                `).join('')}
-            </div>
-
-            <button class="btn-like ${post.minha_reacao ? 'active' : ''}" onclick="handleLikeSimples(${post.id})">
-                ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<i data-lucide="heart"></i>`}
-                <span class="like-count">${post.total_reacoes || 0}</span>
-            </button>
-        </div>
-    </div>
-</article>
-`;
+        </article>
+        `;
     }).join('');
 
     if (window.lucide) window.lucide.createIcons();
