@@ -72,7 +72,10 @@ function renderizarPosts(posts) {
     }
 
     feedContainer.innerHTML = posts.map(post => {
-        const minhaReacao = post.minha_reacao; 
+        // --- LOGICA ESTILO FACEBOOK ---
+        const resumo = post.reacoes_resumo || {};
+        const reacoesAtivas = Object.keys(resumo).filter(tipo => resumo[tipo] > 0);
+        const total = post.total_reacoes || 0;
         
         // Garante que a foto do dono do post também carregue via URL
         const fotoAutor = post.usuario_foto 
@@ -89,13 +92,29 @@ function renderizarPosts(posts) {
                             <span class="post-username">${post.usuario_nome}</span>
                             <span class="post-time">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
-                        <button class="post-more"><i data-lucide="more-horizontal"></i></button>
                     </div>
+                    
                     <p class="post-content">${post.texto_sentimento}</p>
                     ${post.gif_url ? `<div class="post-image-container"><img src="${post.gif_url}" class="post-image"></div>` : ''}
                     
-                    <div class="post-actions">
-                        <div class="reaction-container">
+                    <!-- PILHA DE EMOJIS (FACEBOOK STYLE) -->
+                    ${total > 0 ? `
+                    <div class="flex items-center gap-2 mb-3 px-1">
+                        <div class="flex -space-x-1.5">
+                            ${reacoesAtivas.map((tipo, idx) => `
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white ring-2 ring-white text-sm" 
+                                  style="z-index: ${10 - idx}">
+                                ${REACOES_MAPA[tipo] || '👍'}
+                            </span>
+                             `).join('')}
+                        </div>
+                        <span class="text-sm text-slate-500 font-bold">${total}</span>
+                    </div>
+                ` : ''}
+
+                    <!-- 2. BOTÕES DE AÇÃO -->
+                    <div class="post-actions border-t border-slate-100 pt-2">
+                        <div class="reaction-container relative inline-flex">
                             <div class="reaction-menu">
                                 ${Object.keys(REACOES_MAPA).map(tipo => `
                                     <button class="reaction-btn" onclick="handleReacaoClique(${post.id}, '${tipo}')">
@@ -105,8 +124,12 @@ function renderizarPosts(posts) {
                             </div>
 
                             <button class="btn-like ${post.minha_reacao ? 'active' : ''}" onclick="handleLikeSimples(${post.id})">
-                                ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<i data-lucide="heart"></i>`}
-                                <span class="like-count">${post.total_reacoes || 0}</span>
+                                <div class="like-icon-wrapper flex items-center justify-center">
+                                    ${post.minha_reacao 
+                                        ? `<span class="text-lg">${post.minha_reacao}</span>` 
+                                        : `<i data-lucide="heart" class="w-7 h-7"></i>`}
+                                </div>
+                                <span class="text-sm font-bold">${post.minha_reacao ? 'Reagido' : 'Reagir'}</span>
                             </button>
                         </div>
                     </div>

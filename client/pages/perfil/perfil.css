@@ -654,31 +654,7 @@ body {
     height: auto !important;
 }
 
-/* Estilo para o botão que contém a foto */
-.user-profile-button {
-    width: 64px;
-    height: 64px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.user-profile-button:hover {
-    opacity: 0.8;
-}
-
-/* Estilo para a foto do usuário */
-.user-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #3b82f6; /* Cor azul da borda */
-    padding: 2px;
+.post-actions.border-t.border-slate-100.pt-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
