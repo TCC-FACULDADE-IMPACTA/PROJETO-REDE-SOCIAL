@@ -177,7 +177,7 @@ function renderPosts(posts) {
                         <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleDateString()}</p>
                     </div>
                 </div>
-
+ 
                 ${ehMeuPost ? `
                     <div class="flex gap-1">
                         <button onclick="prepararEdicao(${post.id}, '${post.texto_sentimento.replace(/'/g, "\\'")}', '${post.gif_url || ''}')" 

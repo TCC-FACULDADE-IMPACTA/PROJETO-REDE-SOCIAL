@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mood</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Spline+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="perfil.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+
+    <!-- Floating Bottom Navigation -->
+    <nav class="bottom-nav">
+        <!-- Navigation Items -->
+        <div class="nav-items-container">
+            <a href="/pages/postagens/postagem.html" class="nav-link">
+                <i data-lucide="heart"></i>
+                <span>Sentimentos</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i data-lucide="search"></i>
+                <span>Buscar</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i data-lucide="sparkles"></i>
+                <span>Humores</span>
+            </a>
+        </div>
+
+        <!-- Perfil Button (Active) -->
+        <button class="nav-active-btn electric-gradient">
+            <i data-lucide="user" style="width:1.5rem; height:1.5rem; fill:white;"></i>
+            <span style="font-size:10px; font-weight:900; letter-spacing:0.05em; text-transform:uppercase;">Perfil</span>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Profile Header -->
+        <div class="relative">
+            <div class="profile-cover electric-gradient"></div>
+            <div class="profile-info-section">
+                <div class="profile-header-top">
+                    <div class="avatar-wrapper">
+                        <img id="profile-img" alt="Foto de Perfil" class="avatar-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200" />
+                    </div>
+                    <button id="open-modal" class="btn-edit">
+                        <i data-lucide="edit-3" style="width:1rem; height:1rem;"></i>
+                        Editar Perfil
+                    </button>
+                </div>
+
+                <div class="profile-details">
+                    <div class="profile-name-row">
+                        <div class="profile-name-container">
+                            <h1 id="profile-display-name" class="profile-name">Alex Silva</h1>
+                        </div>
+                        <p id="profile-handle" class="text-outline">@alex_vibe</p>
+                    </div>
+                    <p id="profile-bio" class="profile-bio">
+                        Vivendo intensamente cada oscilação emocional. ⚡️ Entusiasta de arte generativa e curador de bons momentos. No momento em:
+                        <span class="mood-tag">
+                            Modo Euphoric
+                        </span>
+                    </p>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value">1.2k</span>
+                            <span class="stat-label">Seguindo</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">8.4k</span>
+                            <span class="stat-label">Seguidores</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky-tabs">
+                <button class="tab-btn">Posts</button>
+            </div>
+        </div>
+
+        <!-- Feed Area -->
+        <div id="feed" class="feed-container">
+            <!-- Posts serão inseridos via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Perfil</h2>
+                <button id="close-modal" class="modal-close">
+                    <i data-lucide="x" style="width:1.5rem; height:1.5rem;"></i>
+                </button>
+            </div>
+            <form id="edit-profile-form" class="edit-form">
+                <div class="form-group">
+                    <label class="form-label" for="edit-bio-text">Biografia</label>
+                    <textarea class="form-textarea" id="edit-bio-text" placeholder="Conte-nos sobre você..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-photo">Foto de Perfil</label>
+                    <input class="form-input" type="file" id="edit-photo" accept="image/*">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-edit" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary-action electric-gradient">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="perfil.js"></script>
+</body>
+
+</html>
