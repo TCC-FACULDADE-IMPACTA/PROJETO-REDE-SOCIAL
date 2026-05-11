@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Usuario, Credencial
 from datetime import date
-from utils.converter_foto import converter_foto_para_base64
+
 
 # SERIALIZERS PARA O CADASTRO DE USUÁRIOS COM VALIDAÇÕES
 class CadastroSerializer(serializers.Serializer):
@@ -49,21 +49,19 @@ class LoginSerializer(serializers.Serializer):
 # SERIALIZER PARA EXIBIR O PERFIL DO USUÁRIO (SEM DADOS SENSÍVEIS)
 class PerfilSerializer(serializers.ModelSerializer):
     stats = serializers.SerializerMethodField()
+    foto = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Usuario
         fields = ['id', 'nome', 'username', 'bio', 'nascimento', 'foto', 'stats']
+
 
     def get_stats(self, obj):
         return {
             "seguindo": 1250,
             "seguidores": 108
         }
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        # Aplica a conversão para que a foto não venha null ou quebre
-        data['foto'] = converter_foto_para_base64(instance.foto)
-        return data
+
 
 
 class FotoPerfilSerializer(serializers.ModelSerializer):
@@ -74,11 +72,8 @@ class FotoPerfilSerializer(serializers.ModelSerializer):
 
 
 class EditarPerfilSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False, allow_null=True)
     class Meta:
         model = Usuario
-        fields = ['nome', 'bio', 'foto']
+        fields = ['nome', 'bio', 'foto', 'username']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['foto'] = converter_foto_para_base64(instance.foto)
-        return data

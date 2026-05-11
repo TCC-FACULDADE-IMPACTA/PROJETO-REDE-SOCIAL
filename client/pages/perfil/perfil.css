@@ -361,6 +361,7 @@ body {
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   margin-bottom: 0.5rem;
   z-index: 100;
+  height: auto;
 }
 
 .reaction-container:hover .reaction-menu {
@@ -524,8 +525,8 @@ body {
 }
 
 .post-avatar {
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -554,6 +555,7 @@ body {
 
 .post-username {
   font-weight: 700;
+  font-size: 25px;
 }
 
 .post-time {
@@ -582,6 +584,7 @@ body {
   color: var(--color-on-surface-variant);
   margin: 1rem 0;
   line-height: 1.625;
+  font-size: 25px;
 }
 
 .post-image-container {
@@ -593,8 +596,8 @@ body {
 
 .post-image {
   width: 100%;
-  height: 20rem;
-  object-fit: cover;
+  height: auto;
+  display: block;
 }
 
 .post-actions {
@@ -633,4 +636,49 @@ body {
 }
 .w-full {
   width: 100%;
+}
+
+/* Para o emoji que aparece no botão após reagir */
+.reaction-container .btn-like.active .text-xl {
+    font-size: 1.3rem !important;
+}
+
+/* Para os emojis dentro do menu de seleção */
+.reaction-menu .reaction-btn {
+    font-size: 2.0rem !important;
+    padding: 10px;
+}
+
+/* Garante que o menu se ajuste ao novo tamanho */
+.reaction-menu {
+    height: auto !important;
+}
+
+/* Estilo para o botão que contém a foto */
+.user-profile-button {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.user-profile-button:hover {
+    opacity: 0.8;
+}
+
+/* Estilo para a foto do usuário */
+.user-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3b82f6; /* Cor azul da borda */
+    padding: 2px;
 }

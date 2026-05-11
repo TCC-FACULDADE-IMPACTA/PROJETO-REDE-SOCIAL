@@ -5,11 +5,15 @@
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #ffffff; /* Define o fundo como branco */
+    margin: 0;                 /* Remove margens padrão do navegador */
+    min-height: 100vh;
 }
 
-.signature-gradient {
+.envia {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
 }
+
 
 .nav-btn {
     display: flex;

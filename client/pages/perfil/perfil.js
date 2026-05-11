@@ -1,158 +1,180 @@
-// Dados simulados
-const posts = [
-    {
-        id: 1,
-        user: { name: 'Alex Silva', handle: '@alex_vibe', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100' },
-        time: '2h',
-        content: 'A vibe de hoje está simplesmente eletrizante! ⚡️ Curtindo as luzes da cidade com esse novo preset.',
-        image: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&q=80&w=800',
-        likes: '1.4k',
-        reaction: null
-    },
-    {
-        id: 2,
-        user: { name: 'Alex Silva', handle: '@alex_vibe', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100' },
-        time: '5h',
-        content: 'Mood: Focado no fluxo criativo. 🌊 Experimentando novas texturas fluidas.',
-        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800',
-        likes: '856',
-        reaction: null
-    }
-];
+import api from "../../services/api.js";
 
-const reactions = ['😂', '👍', '❤', '😱', '😢', '😡', '🙏'];
+// Mapeamento para exibir os emojis baseados nos nomes que o seu banco/serializer usam
+const REACOES_MAPA = {
+    'curtir': '👍', 'amei': '❤️', 'forca': '💪', 
+    'haha': '😆', 'uau': '😮', 'triste': '😢', 'grr': '😠'
+};
 
-// Função para inicializar ícones
-function initIcons() {
-    if (window.lucide) {
-        window.lucide.createIcons();
+// URL Base do Django para completar o caminho das imagens se necessário
+const BASE_URL = "http://127.0.0.1:8000";
+
+// --- ELEMENTOS DA UI ---
+const modal = document.getElementById('edit-modal');
+const editForm = document.getElementById('edit-profile-form');
+const feedContainer = document.getElementById('feed');
+
+// --- INICIALIZAÇÃO ---
+document.addEventListener('DOMContentLoaded', () => {
+    carregarConteudoPagina();
+    configurarEventosModal();
+});
+
+// Busca perfil e posts simultaneamente para ganhar tempo
+async function carregarConteudoPagina() {
+    try {
+        const [resPerfil, resPosts] = await Promise.all([
+            api.get("/api/perfil/"),
+            api.get("/api/listar_postagens_usuario/") 
+        ]);
+
+        renderizarDadosPerfil(resPerfil.data);
+        renderizarPosts(resPosts.data);
+
+    } catch (error) {
+        console.error("Erro ao carregar conteúdo:", error);
+        if (error.response?.status === 401) window.location.href = "login.html";
     }
 }
 
-// Função para renderizar posts
-function renderPosts() {
-    const feed = document.getElementById('feed');
-    if (!feed) return;
+// --- 1. RENDERIZAÇÃO DO CABEÇALHO (GUI) ---
+function renderizarDadosPerfil(usuario) {
+    if (!usuario) return;
 
-    feed.innerHTML = posts.map(post => `
+    document.getElementById('profile-display-name').textContent = usuario.nome;
+    document.getElementById('profile-handle').textContent = `@${usuario.username}`;
+    document.getElementById('profile-bio').innerHTML = `
+        ${usuario.bio || 'Sem biografia'} <span class="mood-tag">Modo Euphoric</span>
+    `;
+    
+    // Tratamento da Foto: Se vier a URL do Django, aplica no src
+    if (usuario.foto) {
+        const imgElement = document.getElementById('profile-img');
+        // Se a URL começar com /media, concatenamos com o BASE_URL
+        imgElement.src = usuario.foto.startsWith('http') ? usuario.foto : `${BASE_URL}${usuario.foto}`;
+    }
+
+    const stats = document.querySelectorAll('.stat-value');
+    if (usuario.stats && stats.length >= 2) {
+        stats[0].textContent = usuario.stats.seguindo;
+        stats[1].textContent = usuario.stats.seguidores;
+    }
+
+    // Deixa o campo de texto do modal já preenchido com a bio atual
+    document.getElementById('edit-bio-text').value = usuario.bio || '';
+}
+
+// --- 2. RENDERIZAÇÃO DO FEED DE POSTS ---
+function renderizarPosts(posts) {
+    if (!posts || posts.length === 0) {
+        feedContainer.innerHTML = '<p class="empty-feed">Você ainda não compartilhou sentimentos.</p>';
+        return;
+    }
+
+    feedContainer.innerHTML = posts.map(post => {
+        const minhaReacao = post.minha_reacao; 
+        
+        // Garante que a foto do dono do post também carregue via URL
+        const fotoAutor = post.usuario_foto 
+            ? (post.usuario_foto.startsWith('http') ? post.usuario_foto : `${BASE_URL}${post.usuario_foto}`)
+            : 'https://via.placeholder.com/100';
+
+        return `
         <article class="post-card mood-glow" data-post-id="${post.id}">
             <div class="post-layout">
-                <img src="${post.user.avatar}" class="post-avatar">
+                <img src="${fotoAutor}" class="post-avatar">
                 <div class="post-main">
                     <div class="post-header">
                         <div class="post-user-info">
-                            <div class="post-user-row">
-                                <span class="post-username">${post.user.name}</span>
-                                <span class="post-time">• ${post.time}</span>
-                            </div>
-                            <span class="post-handle">${post.user.handle}</span>
+                            <span class="post-username">${post.usuario_nome}</span>
+                            <span class="post-time">${post.data_criacao.substring(0, 10).split('-').reverse().join('-')}</span>
                         </div>
-                        <button class="post-more">
-                            <i data-lucide="more-horizontal" style="width:1.25rem; height:1.25rem;"></i>
-                        </button>
+                        <button class="post-more"><i data-lucide="more-horizontal"></i></button>
                     </div>
-                    <p class="post-content">${post.content}</p>
-                    <div class="post-image-container">
-                        <img src="${post.image}" class="post-image">
-                    </div>
+                    <p class="post-content">${post.texto_sentimento}</p>
+                    ${post.gif_url ? `<div class="post-image-container"><img src="${post.gif_url}" class="post-image"></div>` : ''}
+                    
                     <div class="post-actions">
                         <div class="reaction-container">
                             <div class="reaction-menu">
-                                ${reactions.map(r => `<button class="reaction-btn" onclick="handleReaction(${post.id}, '${r}')">${r}</button>`).join('')}
+                                ${Object.keys(REACOES_MAPA).map(tipo => `
+                                    <button class="reaction-btn" onclick="handleReacaoClique(${post.id}, '${tipo}')">
+                                        ${REACOES_MAPA[tipo]}
+                                    </button>
+                                `).join('')}
                             </div>
-                            <button class="btn-like group" onclick="handleLike(${post.id})">
-                                ${post.reaction ? `<span class="text-xl">${post.reaction}</span>` : `<i data-lucide="heart" style="width:1.25rem; height:1.25rem;"></i>`}
-                                <span class="like-count">${post.likes}</span>
+
+                            <button class="btn-like ${post.minha_reacao ? 'active' : ''}" onclick="handleLikeSimples(${post.id})">
+                                ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<i data-lucide="heart"></i>`}
+                                <span class="like-count">${post.total_reacoes || 0}</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </article>
-    `).join('');
-    
-    initIcons();
+        `;
+    }).join('');
+
+    if (window.lucide) window.lucide.createIcons();
 }
 
-// Logica de Reações e Likes
-window.handleReaction = (postId, reaction) => {
-    const post = posts.find(p => p.id === postId);
-    if (post) {
-        post.reaction = reaction;
-        renderPosts();
+// --- 3. LÓGICA DE REAÇÕES ---
+window.handleReacaoClique = async (postId, tipo) => {
+    try {
+        await api.post(`/api/gerenciar_reacao/${postId}/`, { reacao_tipo: tipo });
+        // Recarrega os posts para atualizar a lista
+        const res = await api.get("/api/listar_postagens_usuario/");
+        renderizarPosts(res.data);
+    } catch (error) {
+        console.error("Erro ao reagir:", error);
     }
 };
 
-window.handleLike = (postId) => {
-    const post = posts.find(p => p.id === postId);
-    if (post) {
-        if (post.reaction) {
-            post.reaction = null;
-        } else {
-            post.reaction = '❤';
+window.handleLikeSimples = (postId) => window.handleReacaoClique(postId, 'curtir');
+
+// --- 4. ATUALIZAR PERFIL (PATCH PARA O DJANGO) ---
+editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('bio', document.getElementById('edit-bio-text').value);
+    
+    const fotoFile = document.getElementById('edit-photo').files[0];
+    if (fotoFile) {
+        formData.append('foto', fotoFile);
+    }
+
+    try {
+        // O Axios/Api service já lida com o boundary do FormData automaticamente
+        const response = await api.patch("/api/atualizar_perfil/", formData);
+        
+        if (response.status === 200) {
+            alert("Perfil atualizado!");
+            
+            // O Django retorna os dados atualizados. Se houver 'dados' dentro da resposta:
+            const dadosNovos = response.data.dados || response.data;
+            renderizarDadosPerfil(dadosNovos);
+            
+            toggleModal(false);
         }
-        renderPosts();
+    } catch (error) {
+        console.error("Erro ao salvar perfil:", error.response?.data || error);
+        alert("Erro ao salvar perfil. Verifique o console.");
     }
-};
+});
 
-// Logica do Modal de Perfil
-const modal = document.getElementById('edit-modal');
-const openModalBtn = document.getElementById('open-modal');
-const closeModalBtns = [document.getElementById('close-modal'), document.getElementById('cancel-edit')];
-const editForm = document.getElementById('edit-profile-form');
-
-const profileElements = {
-    bio: document.getElementById('profile-bio'),
-    img: document.getElementById('profile-img')
-};
-
-const inputElements = {
-    bio: document.getElementById('edit-bio-text'),
-    photo: document.getElementById('edit-photo')
-};
+// --- 5. LÓGICA DO MODAL ---
+function configurarEventosModal() {
+    const openBtn = document.getElementById('open-modal');
+    if (openBtn) openBtn.onclick = () => toggleModal(true);
+    
+    document.getElementById('close-modal').onclick = () => toggleModal(false);
+    document.getElementById('cancel-edit').onclick = () => toggleModal(false);
+    
+    window.onclick = (e) => { if (e.target === modal) toggleModal(false); };
+}
 
 function toggleModal(show) {
-    if (show) {
-        // Preencher inputs com valores atuais
-        const bioText = profileElements.bio.childNodes[0].textContent.trim();
-        inputElements.bio.value = bioText;
-        
-        modal.classList.add('active');
-    } else {
-        modal.classList.remove('active');
-        inputElements.photo.value = ''; // Reset file input
-    }
+    show ? modal.classList.add('active') : modal.classList.remove('active');
 }
-
-openModalBtn.addEventListener('click', () => toggleModal(true));
-closeModalBtns.forEach(btn => btn.addEventListener('click', () => toggleModal(false)));
-
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) toggleModal(false);
-});
-
-editForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    // Atualizar bio (preservando a tag de modo)
-    const moodTag = profileElements.bio.querySelector('.mood-tag').outerHTML;
-    profileElements.bio.innerHTML = inputElements.bio.value + ' ' + moodTag;
-    
-    // Handle File Upload
-    const file = inputElements.photo.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            profileElements.img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-    
-    toggleModal(false);
-});
-
-// Inicializar aplicativo
-document.addEventListener('DOMContentLoaded', () => {
-    initIcons();
-    renderPosts();
-});

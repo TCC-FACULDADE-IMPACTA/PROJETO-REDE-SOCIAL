@@ -139,6 +139,7 @@ DATE_INPUT_FORMATS = [
 # Configuração para arquivos de mídia
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+print(f"DEBUG: O Django está buscando media em: {MEDIA_ROOT}")
 
 # Configuração padrão de data para Django REST Framework
 REST_FRAMEWORK = {
@@ -176,3 +177,4 @@ EXTERNAL_SERVICES = {
         'TARGET_LANGUAGE': 'en'
     }
 }
+

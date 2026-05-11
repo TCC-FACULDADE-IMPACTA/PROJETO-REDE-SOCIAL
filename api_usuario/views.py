@@ -103,10 +103,14 @@ def efetuar_login(request):
 def ver_perfil(request):
     """ Fluxo: VER PERFIL DO USUÁRIO """
 
-    usuario = request.user_autenticado
+    usuario = getattr(request, 'user_autenticado', None)
 
+    if not usuario:
+        return Response({"erro": "Usuário não identificado"}, status=401)
+
+    usuario_atualizado = Usuario.objects.get(id=usuario.id)
     # SE O USUÁRIO FOR ENCONTRADO, RETORNA OS DADOS DO PERFIL
-    serializer = PerfilSerializer(usuario)
+    serializer = PerfilSerializer(usuario_atualizado, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -143,29 +147,31 @@ def upload_foto(request):
 @parser_classes([MultiPartParser, FormParser])
 def atualizar_perfil(request):
     """ Fluxo: ATUALIZAR PERFIL DO USUÁRIO """
+    print(f"data: {request.data}")
+    print(f"files: {request.FILES}")
 
-    usuario = request.user_autenticado
-    serializer = EditarPerfilSerializer(usuario, data=request.data, partial=True)
+    # O SEGREDO ESTÁ AQUI:
+    # O seu decorador 'token_obrigatorio' provavelmente anexa o usuário ao request.
+    # Verifique se o seu decorador usa 'request.user' ou 'request.user_autenticado'
+    usuario = getattr(request, 'user_autenticado', None)
 
+    if not usuario:
+        return Response({"erro": "Usuário não identificado"}, status=401)
 
-    if serializer.is_valid():
-        dados = serializer.validated_data
-        nova_foto = dados.get('foto', None)
-        if nova_foto:
-            usuario.foto = nova_foto.read()
+    # 1. Pegamos a foto e a bio do request manualmente
+    nova_bio = request.data.get('bio')
+    nova_foto = request.FILES.get('foto')
 
-        campos_para_atualizar = list(dados.keys())
-        for attr, value in dados.items():
-            setattr(usuario, attr, value)
+    # 2. Atualizamos os campos no objeto
+    if nova_bio:
+        usuario.bio = nova_bio
+    
+    if nova_foto:
+        usuario.foto = nova_foto # O Django cuida de mover para media/perfil/ aqui
 
-        if nova_foto:
-            campos_para_atualizar.append('foto')
+    # 3. SALVAMENTO MANUAL NO BANCO (Isso garante a persistência)
+    usuario.save()
 
-        usuario.save(update_fields=campos_para_atualizar)
-        return Response({
-            'mensagem': 'Perfil atualizado com sucesso!',
-            'dados': serializer.data
-        }, status=status.HTTP_200_OK)
-
-    # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # 4. Retornamos os dados usando o Serializer para garantir o formato correto
+    serializer = PerfilSerializer(usuario, context={'request': request})
+    return Response(serializer.data, status=200)

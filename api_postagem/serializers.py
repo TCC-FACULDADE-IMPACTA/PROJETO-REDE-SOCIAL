@@ -1,17 +1,17 @@
 from rest_framework import serializers
 from .models import PostSentimento, Reacao
 import emoji
-from utils.converter_foto import converter_foto_para_base64
+
 
 
 REACOES_MAPA = {
-    'curtir': emoji.emojize(':thumbs_up:'),
-    'amei': emoji.emojize(':red_heart:'),
-    'forca': emoji.emojize(':smiling_face_with_hearts:'),
-    'haha': emoji.emojize(':face_with_tears_of_joy:'),
-    'uau': emoji.emojize(':astonished_face:'),
-    'triste': emoji.emojize(':pensive_face:'),
-    'grr': emoji.emojize(':pouting_face:'),
+    'curtir': emoji.emojize(':thumbs_up:', language='alias'),
+    'amei': emoji.emojize(':red_heart:', language='alias'),
+    'forca': emoji.emojize(':flexed_biceps:', language='alias'),
+    'haha': emoji.emojize(':face_with_tears_of_joy:', language='alias'),
+    'uau': emoji.emojize(':astonished_face:', language='alias'),
+    'triste': emoji.emojize(':pensive_face:', language='alias'),
+    'grr': emoji.emojize(':angry_face:', language='alias'),
 }
 
 # Serializer para o frontend listar posts com texto e GIF
@@ -53,15 +53,6 @@ class ListarPostSentimentoSerializer(serializers.ModelSerializer):
             return reacao.reacao_tipo if reacao else None
         return None
 
-    # CONVERTE A FOTO DO USUÁRIO PARA BASE64
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        if instance.usuario:
-            data['foto'] = converter_foto_para_base64(instance.usuario.foto)
-        else:
-            data['foto'] = None
-
-        return data
 
         read_only_fields = ['data_criacao']  # Campos somente leitura (não podem ser editados pelo frontend)
 
