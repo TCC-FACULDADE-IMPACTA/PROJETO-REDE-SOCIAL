@@ -146,9 +146,30 @@ sendBtn.addEventListener('click', async (e) => {
 async function carregarFeed() {
     try {
         const response = await api.get('/api/listar_postagens/');
-        renderPosts(response.data);
+        const posts = response.data;
+
+        console.log("Posts carregados:", posts); // Debug: Veja se os posts estão chegando
+        console.log("Meu ID no LocalStorage:", MEU_USUARIO_ID); // Debug: Veja o seu ID
+
+        if (posts.length > 0) {
+            const meuPost = posts.find(p => p.usuario == MEU_USUARIO_ID);
+            
+            if (meuPost && meuPost.usuario_foto) {
+                const imgTopo = document.getElementById('user-photo-header');
+                if (imgTopo) {
+                    imgTopo.src = meuPost.usuario_foto;
+                    console.log("Foto do topo atualizada para:", meuPost.usuario_foto);
+                } else {
+                    console.error("Elemento 'user-photo-header' não encontrado no HTML!");
+                }
+            } else {
+                console.warn("Nenhum post seu foi encontrado para extrair a foto.");
+            }
+        }
+
+        renderPosts(posts);
     } catch (error) {
-        console.error("Erro ao carregar feed.");
+        console.error("Erro ao carregar feed:", error);
     }
 }
 
@@ -208,7 +229,7 @@ function renderPosts(posts) {
                 <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-50">
                     <div class="flex items-center">
                         ${reacoesAtivas.map((tipo, idx) => `
-                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white border-2 border-white text-[10px]" 
+                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border-2 border-white text-xl" 
                                   style="margin-left: ${idx === 0 ? '0' : '-8px'}; z-index: ${10 - idx}">
                                 ${REACOES_MAPA[tipo]}
                             </span>
