@@ -140,6 +140,7 @@ def upload_foto(request):
 # FLUXO: ATUALIZAR PERFIL DO USUÁRIO
 @api_view(['PATCH'])
 @token_obrigatorio
+@parser_classes([MultiPartParser, FormParser])
 def atualizar_perfil(request):
     """ Fluxo: ATUALIZAR PERFIL DO USUÁRIO """
 

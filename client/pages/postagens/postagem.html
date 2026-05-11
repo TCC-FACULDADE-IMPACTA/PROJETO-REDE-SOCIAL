@@ -69,22 +69,33 @@
     <!-- BottomNavBar -->
     <nav class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4">
         <div class="bg-white/80 backdrop-blur-xl w-full max-w-md rounded-full shadow-[0px_20px_40px_rgba(57,43,83,0.12)] flex justify-around items-center p-2">
-            <button class="nav-btn active">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
-                <span class="nav-label">Sentimentos</span>
-            </button>
-            <button class="nav-btn">
-                <span class="material-symbols-outlined">search</span>
-                <span class="nav-label">Buscar</span>
-            </button>
-            <button class="nav-btn">
+            
+                <button type="button"  class="nav-btn active">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                    <span class="nav-label">Sentimentos</span>
+                </button>
+            
+            <a href="#">
+                <button type="button" class="nav-btn">
+                    <span class="material-symbols-outlined">search</span>
+                    <span class="nav-label">Buscar</span>
+                </button>
+            </a>
+
+            <a href="#">
+            <button type="button" class="nav-btn">
                 <span class="material-symbols-outlined">auto_awesome</span>
                 <span class="nav-label">Humores</span>
             </button>
-            <button class="nav-btn">
-                <span class="material-symbols-outlined">person</span>
-                <span class="nav-label">Perfil</span>
-            </button>
+            </a>
+
+            <a href="/pages/perfil/perfil.html">
+                <button type="button" class="nav-btn">
+                    <span class="material-symbols-outlined">person</span>
+                    <span class="nav-label">Perfil</span>
+                </button>
+            </a>
+            
         </div>
     </nav>
 <div id="gif-modal" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
