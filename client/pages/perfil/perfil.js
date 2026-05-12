@@ -83,7 +83,7 @@ function renderizarPosts(posts) {
             : 'https://via.placeholder.com/100';
 
         return `
-        <article class="post-card mood-glow" data-post-id="${post.id}">
+        <article class="post-card mood-glow" style="transform: scale(0.95);" data-post-id="${post.id}">
             <div class="post-layout">
                 <img src="${fotoAutor}" class="post-avatar">
                 <div class="post-main">
