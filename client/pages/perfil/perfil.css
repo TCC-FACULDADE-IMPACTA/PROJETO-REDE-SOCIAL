@@ -515,6 +515,15 @@ body {
   transition: all 0.2s ease;
 }
 
+.post-card.mood-glow{
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+
+.card-menor{
+  transform: scale(0.95);
+}
+
 .post-card:hover {
   border-color: #dae2fd;
 }
