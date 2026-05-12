@@ -70,6 +70,7 @@ A rede social foi construída com o seguinte stack tecnológico:
 * DJANGO RESTFRAMEWORK
 * JWT
 * Pytest
+* emoji
 
 ---
 
