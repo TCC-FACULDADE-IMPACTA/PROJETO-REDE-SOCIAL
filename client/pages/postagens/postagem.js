@@ -40,7 +40,6 @@ function limparEstadoForm() {
     gifPreviewContainer.classList.add('hidden');
     formTitle.innerText = "Compartilhe um sentimento";
     sendBtn.innerText = "Enviar";
-    sendBtn.className = "signature-gradient text-white px-8 py-2.5 rounded-full font-bold shadow-lg transition-all";
     if (cancelBtn) cancelBtn.classList.add('hidden');
 }
 
