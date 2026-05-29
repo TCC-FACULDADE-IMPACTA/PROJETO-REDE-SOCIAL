@@ -150,6 +150,9 @@ https://aistudio.google.com/api-keys
 | **DELETE** | `/api/deletar_postagem/<int:post_id>/` | Deleta a postagem do usuario(Requer ID da postagem) |
 | **GET** | `/api/listar_postagem/` | Retona todas as postagem dos usuários no banco |
 | **PUT/PATCH** | `/api/atualizar_postagem/<int:post_id>/` | Atualiza as postagem do usuário (Requer ID da postagem) |
+| **PATCH** | `/api/atualizar_perfil/<int:user_id>/` | Atualiza o perfil do usuário (Requer Id do usuario) |
+| **POST** | `/api/gerenciar_reacao/<int:post_id>/` | Cria e salva reações na postagem do usuario |
+| **GET** | `/api/api/listar_postagens_usuario/` | Retorna todas as postagens somente do usuario logado |
 
 ---
 
