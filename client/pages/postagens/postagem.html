@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
     <link rel="stylesheet" href="postagem.css">
+    <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 </head>
 <body class="bg-fixed min-h-screen signature-gradient font-body text-on-surface">
     <!-- TopAppBar -->
@@ -69,59 +70,46 @@
     </main>
 
     <!-- BottomNavBar -->
-    <nav class="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4">
-        <div class="bg-white/80 backdrop-blur-xl w-full max-w-md rounded-full shadow-[0px_20px_40px_rgba(57,43,83,0.12)] flex justify-around items-center p-2">
-            
-                <button type="button"  class="nav-btn active">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
-                    <span class="nav-label">Sentimentos</span>
-                </button>
-            
-            <a href="#">
-                <button type="button" class="nav-btn">
-                    <span class="material-symbols-outlined">search</span>
-                    <span class="nav-label">Buscar</span>
-                </button>
+    <nav class="bottom-nav">
+        <!-- Navigation Items -->
+        <!-- Perfil Button (Active) -->
+        <button class="nav-active-btn electric-gradient">
+            <i data-lucide="heart" style="width:1.5rem; height:1.5rem; fill:white;"></i>
+            <span style="font-size:10px; font-weight:900; letter-spacing:0.05em; text-transform:uppercase;">Sentimentos</span>
+        </button>
+        <div class="nav-items-container">
+            <a href="/pages/perfil/perfil.html" class="nav-link">
+                <i data-lucide="user"></i>
+                <span>Perfil</span>
             </a>
-
-            <a href="#">
-            <button type="button" class="nav-btn">
-                <span class="material-symbols-outlined">auto_awesome</span>
-                <span class="nav-label">Humores</span>
-            </button>
-            </a>
-
-            <a href="/pages/perfil/perfil.html">
-                <button type="button" class="nav-btn">
-                    <span class="material-symbols-outlined">person</span>
-                    <span class="nav-label">Perfil</span>
-                </button>
-            </a>
-            
         </div>
     </nav>
-<div id="gif-modal" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="font-bold text-slate-900 text-lg">Buscar GIF</h3>
-            <button id="close-modal" class="text-slate-400 hover:text-slate-600">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div class="p-4">
-            <div class="flex gap-2 mb-4">
-                <input type="text" id="gif-search-input" placeholder="Ex: feliz, animado..." 
-                    class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-violet-500">
-                <button id="gif-search-btn" class="bg-violet-600 text-white p-2 rounded-xl">
-                    <span class="material-symbols-outlined">search</span>
+
+    <div id="gif-modal" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-slate-900 text-lg">Buscar GIF</h3>
+                <button id="close-modal" class="text-slate-400 hover:text-slate-600">
+                    <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div id="gif-results" class="grid grid-cols-2 gap-2 h-80 overflow-y-auto pr-2 custom-scrollbar">
-                <p class="col-span-2 text-center text-slate-400 py-10">Busque algo acima...</p>
+            <div class="p-4">
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="gif-search-input" placeholder="Ex: feliz, animado..." 
+                        class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-violet-500">
+                    <button id="gif-search-btn" class="bg-violet-600 text-white p-2 rounded-xl">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                </div>
+                <div id="gif-results" class="grid grid-cols-2 gap-2 h-80 overflow-y-auto pr-2 custom-scrollbar">
+                    <p class="col-span-2 text-center text-slate-400 py-10">Busque algo acima...</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <script>
+        lucide.createIcons();
+    </script>
     <script type="module" src="postagem.js"></script>
 </body>
 </html>
