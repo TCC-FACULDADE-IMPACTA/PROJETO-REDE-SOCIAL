@@ -1,119 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood - Perfil</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Perfil</title>
     <link rel="shortcut icon" href="../../assets/imagens/LOGO-ICO.png" type="image/x-icon"/>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Spline+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;700&family=Spline+Sans:wght@400;500;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+    <link rel="stylesheet" href="../../assets/css/layout.css">
+    <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
     <link rel="stylesheet" href="perfil.css">
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+<body class="min-h-screen bg-white text-[var(--color-on-surface)] antialiased flex flex-col items-center relative overflow-x-hidden">
 
-<body>
+    <header class="bg-white/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-slate-100">
+        <div class="flex justify-between items-center px-6 py-3 max-w-2xl mx-auto w-full">
+            <span class="flex items-center">
+                <img src="../../assets/imagens/MOOD-LGO.png" alt="Logo" class="h-8 object-contain">
+            </span>
+            <div class="flex items-center gap-4">
+                <a href="/pages/perfil/perfil.html" class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full border-2 border-[#4343d5]">
+                    <img id='user-photo-header-profile' src="../../assets/imagens/perfil.jpg" class="w-full h-full object-cover" alt="Avatar">
+                </a>
+                <button class="Btn-sair">
+                    <div class="sign">
+                        <svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg>
+                    </div>
+                    <div class="text">Logout</div>
+                </button>
+            </div>
+        </div>
+    </header>
 
+    <main class="max-w-2xl w-full bg-white min-h-screen relative pt-14 pb-32 mx-auto">
+        
+        <div class="h-44 electric-gradient rounded-b-3xl capa-fullscreen"></div>
+        
+        <div class="px-6 pb-4 border-b border-slate-100 flex flex-col items-center relative">
+            
+            <div class="relative -mt-16 mb-2 z-10">
+                <img id="profile-img" alt="Foto de Perfil" class="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover bg-white" src="../../assets/imagens/perfil.jpg"/>
+            </div>
 
-    <!-- Floating Bottom Navigation -->
+            <div class="w-full flex justify-end absolute top-4 right-6 z-10">
+                <button id="open-modal" class="flex items-center gap-1.5 px-4 py-1.5 border border-slate-300 text-slate-700 font-bold text-xs rounded-full bg-white hover:bg-slate-50 transition-colors shadow-sm">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                    Editar Perfil
+                </button>
+            </div>
+
+            <div class="text-center space-y-2 mt-2 w-full">
+                <div>
+                    <h1 id="profile-display-name" class="text-2xl font-extrabold tracking-tight text-slate-950">Carregando...</h1>
+                    <p id="profile-handle" class="text-xs font-semibold text-slate-400">@username</p>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2">
+                    <p id="profile-bio-text" class="text-slate-600 text-sm max-w-md leading-relaxed font-medium">Buscando informações do seu status...</p>
+                </div>
+                
+                <div class="flex justify-center gap-6 pt-2">
+                    <div class="text-sm">
+                        <span class="font-extrabold text-slate-900 stat-value">0</span>
+                        <span class="text-slate-400 font-semibold text-xs ml-0.5">Seguindo</span>
+                    </div>
+                    <div class="text-sm">
+                        <span class="font-extrabold text-slate-900 stat-value">0</span>
+                        <span class="text-slate-400 font-semibold text-xs ml-0.5">Seguidores</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border-b border-slate-100 flex justify-center">
+            <button class="py-3 px-6 text-[#4343d5] border-b-2 border-[#4343d5] bg-transparent font-bold text-xs tracking-wider uppercase">Posts</button>
+        </div>
+
+        <div id="feed" class="p-6 flex flex-col gap-6 w-full"></div>
+    </main>
+
     <nav class="bottom-nav">
-        <!-- Navigation Items -->
         <div class="nav-items-container">
             <a href="/pages/postagens/postagem.html" class="nav-link">
                 <i data-lucide="heart"></i>
                 <span>Sentimentos</span>
             </a>
-
-        <!-- Perfil Button (Active) -->
             <button class="nav-active-btn electric-gradient">
-                <i data-lucide="user" style="width:1.5rem; height:1.5rem; fill:white;"></i>
-                <span style="font-size:10px; font-weight:900; letter-spacing:0.05em; text-transform:uppercase;">Perfil</span>
+                <i data-lucide="user"></i>
+                <span>Perfil</span>
             </button>
+            <a href="#" class="nav-link">
+                <i data-lucide="log-out"></i>
+                <span>Sair</span>
+            </a>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Profile Header -->
-        <div class="relative">
-            <div class="profile-cover electric-gradient"></div>
-            <div class="profile-info-section">
-                <div class="profile-header-top">
-                    <div class="avatar-wrapper">
-                        <img id="profile-img" alt="Foto de Perfil" class="avatar-img" src="../../assets/imagens/perfil.jpg"/>
-                    </div>
-                        <button id="open-modal" class="btn-edit">
-                            <i data-lucide="edit-3" style="width:1rem; height:1rem;"></i>
-                            Editar Perfil
-                        </button>
-                </div>
-            </div>
-
-                <div class="profile-details">
-                    <div class="profile-name-row">
-                        <div class="profile-name-container">
-                            <h1 id="profile-display-name" class="profile-name"></h1>
-                        </div>
-                        <p id="profile-handle" class="text-outline"></p>
-                    </div>
-                    <p id="profile-bio" class="profile-bio">
-                
-                        <span class="mood-tag">
-                        </span>
-                    </p>
-                    <div class="stats-row">
-                        <div class="stat-item">
-                            <span class="stat-value"></span>
-                            <span class="stat-label">Seguindo</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value"></span>
-                            <span class="stat-label">Seguidores</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sticky-tabs">
-                <button class="tab-btn">Posts</button>
-            </div>
-        </div>
-
-        <!-- Feed Area -->
-        <div id="feed" class="feed-container">
-            <!-- Posts serão inseridos via JavaScript -->
-        </div>
-    </main>
-
-    <!-- Edit Profile Modal -->
-    <div id="edit-modal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 class="modal-title">Editar Perfil</h2>
-                <button id="close-modal" class="modal-close">
-                    <i data-lucide="x" style="width:1.5rem; height:1.5rem;"></i>
+    <div id="edit-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-slate-900">Editar Perfil</h2>
+                <button id="close-modal" class="text-slate-400 hover:text-slate-600 flex items-center justify-center">
+                    <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <form id="edit-profile-form" class="edit-form">
-                <div class="form-group">
-                    <label class="form-label" for="edit-bio-text">Biografia</label>
-                    <textarea class="form-textarea" id="edit-bio-text" placeholder="Conte-nos sobre você..."></textarea>
+            <form id="edit-profile-form" class="space-y-4">
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-500" for="edit-bio-text">Biografia</label>
+                    <textarea class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#4343d5] resize-none h-24" id="edit-bio-text" placeholder="Conte-nos sobre você..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="edit-photo">Foto de Perfil</label>
-                    <input class="form-input" type="file" id="edit-photo" accept="image/*">
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-500" for="edit-photo">Foto de Perfil</label>
+                    <input class="w-full p-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-[#4343d5]" type="file" id="edit-photo" accept="image/*">
                 </div>
-                <div class="modal-actions">
-                    <button type="button" id="cancel-edit" class="btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn-primary-action electric-gradient">Salvar Alterações</button>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" id="cancel-edit" class="py-2 px-5 border border-slate-200 rounded-full font-bold text-xs hover:bg-slate-50">Cancelar</button>
+                    <button type="submit" class="envia text-white py-2 px-5 rounded-full font-bold shadow-md active:scale-95 text-xs">Salvar Alterações</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <script>lucide.createIcons();</script>
     <script type="module" src="perfil.js"></script>
 </body>
-
 </html>
