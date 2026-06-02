@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentimentos</title>
+    <title>Mood - Sentimentos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" href="../../assets/imagens/LOGO-ICO.png" type="image/x-icon"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;700&family=Spline+Sans:wght@400;500;700;900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
-    <link rel="stylesheet" href="postagem.css">
+    <link rel="stylesheet" href="../../assets/css/layout.css">
     <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 </head>
-<body class="bg-fixed min-h-screen signature-gradient font-body text-on-surface">
-    <!-- TopAppBar -->
-    <header class="bg-white/80 backdrop-blur-xl fixed top-0 w-full z-50 shadow-[0px_20px_40px_rgba(57,43,83,0.08)]">
-        <div class="flex justify-between items-center px-6 py-4 max-w-2xl mx-auto">
+<body class="min-h-screen bg-white text-[var(--color-on-surface)] antialiased flex justify-center">
+
+    <header class="bg-white/80 backdrop-blur-xl fixed top-0 w-full z-40 border-b border-[var(--color-surface-container)]">
+        <div class="flex justify-between items-center px-6 py-3 max-w-2xl mx-auto w-full">
             <span class="flex items-center">
-                <img src="../../assets/imagens/MOOD-LGO.png" alt="Logo" class="h-8">
+                <img src="../../assets/imagens/MOOD-LGO.png" alt="Logo" class="h-8 object-contain">
             </span>
             <div class="flex items-center gap-4">
-                <a class="w-16 h-16 flex items-center justify-center overflow-hidden hover:opacity-80 transition-opacity">
-                    <img id='user-photo-header' src="../../assets/imagens/perfil.jpg" class="w-15 h-15 rounded-full object-cover border-2 border-blue-500 p-0.5" alt="Avatar">
+                <a href="/pages/perfil/perfil.html" class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full border-2 border-[#4343d5] hover:scale-105 transition-transform">
+                    <img id='user-photo-header' src="../../assets/imagens/perfil.jpg" class="w-full h-full object-cover" alt="Avatar">
                 </a>
                 <button class="Btn-sair">
-                    <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg>
+                    <div class="sign">
+                        <svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg>
                     </div>
                     <div class="text">Logout</div>
                 </button>
@@ -31,56 +32,54 @@
         </div>
     </header>
 
-    <main class="pt-24 pb-32 px-4 max-w-2xl mx-auto space-y-6">
-        <section class="bg-white rounded-2xl p-6 shadow-[0px_20px_40px_rgba(57,43,83,0.08)]">
-            <h2 id="form-title" class="text-slate-500 font-semibold text-sm mb-4 uppercase tracking-wider">Compartilhe um sentimento</h2>
-            <div class="bg-slate-50 rounded-2xl p-4 mb-4 border border-transparent focus-within:border-violet-200 transition-all">
-                <textarea id="feeling-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder-slate-400 resize-none h-24 text-lg font-medium" placeholder="Como você está se sentindo hoje?"></textarea>
+    <main class="pt-24 pb-32 px-4 max-w-2xl w-full mx-auto space-y-6">
+        
+        <section class="bg-white border border-[var(--color-surface-container)] rounded-2xl p-6 shadow-sm space-y-4 post-card">
+            <h2 id="form-title" class="text-xs font-bold uppercase tracking-wider" style="color: var(--color-outline);">Compartilhe um sentimento</h2>
+            <div class="rounded-xl p-4 border border-[var(--color-surface-container-highest)] focus-within:border-[var(--color-primary)] transition-all" style="background-color: var(--color-surface);">
+                <textarea id="feeling-input" class="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-slate-800 placeholder-slate-400 resize-none h-24 text-base font-medium" placeholder="Como você está se sentindo hoje?"></textarea>
                 
                 <div id="gif-preview-container" class="hidden relative mt-2 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
                     <img id="gif-preview-img" src="" class="w-full h-auto block">
-                    <button id="remove-gif-btn" class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 hover:bg-black transition-colors">
+                    <button id="remove-gif-btn" class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 hover:bg-black transition-colors flex items-center justify-center">
                         <span class="material-symbols-outlined text-sm">close</span>
                     </button>
                 </div>
-
             </div>
+
             <div class="flex items-center justify-between">
-                <div class="flex gap-2">
-                    <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
-                        <span class="material-symbols-outlined text-xl">gif</span>
-                        <span class="text-sm font-medium">Adicionar GIF</span>
-                    </button>
-                </div>
+                <button id="gif-trigger-btn" class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors text-xs font-medium">
+                    <span class="material-symbols-outlined text-lg">gif</span>
+                    <span>Adicionar GIF</span>
+                </button>
 
                 <div class="flex items-center gap-2">
-                    <button id="cancel-edit-btn" class="hidden text-slate-400 hover:text-slate-600 font-medium px-4 py-2 transition-all">
+                    <button id="cancel-edit-btn" class="hidden text-slate-400 hover:text-slate-600 font-medium px-4 py-2 transition-all text-sm">
                         Cancelar
                     </button>
-                <button id="send-btn" class="envia text-white px-8 py-2.5 rounded-full font-bold shadow-lg active:scale-95 transition-all">
-                    Enviar
-                </button>
+                    <button id="send-btn" class="envia text-white px-8 py-2.5 rounded-full font-bold shadow-lg active:scale-95 transition-all text-sm">
+                        Enviar
+                    </button>
+                </div>
             </div>
         </section>
 
-        <!-- Feed List -->
-        <div id="feed" class="space-y-6">
-            <!-- Posts will be injected here -->
-        </div>
+        <div id="feed" class="space-y-6"></div>
     </main>
 
-    <!-- BottomNavBar -->
     <nav class="bottom-nav">
-        <!-- Navigation Items -->
-        <!-- Perfil Button (Active) -->
         <button class="nav-active-btn electric-gradient">
-            <i data-lucide="heart" style="width:1.5rem; height:1.5rem; fill:white;"></i>
-            <span style="font-size:10px; font-weight:900; letter-spacing:0.05em; text-transform:uppercase;">Sentimentos</span>
+            <i data-lucide="heart"></i>
+            <span>Sentimentos</span>
         </button>
         <div class="nav-items-container">
             <a href="/pages/perfil/perfil.html" class="nav-link">
                 <i data-lucide="user"></i>
                 <span>Perfil</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i data-lucide="log-out"></i>
+                <span>Sair</span>
             </a>
         </div>
     </nav>
@@ -89,27 +88,25 @@
         <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center">
                 <h3 class="font-bold text-slate-900 text-lg">Buscar GIF</h3>
-                <button id="close-modal" class="text-slate-400 hover:text-slate-600">
+                <button id="close-modal" class="text-slate-400 hover:text-slate-600 flex items-center justify-center">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div class="p-4">
-                <div class="flex gap-2 mb-4">
-                    <input type="text" id="gif-search-input" placeholder="Ex: feliz, animado..." 
-                        class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-violet-500">
-                    <button id="gif-search-btn" class="bg-violet-600 text-white p-2 rounded-xl">
+            <div class="p-4 space-y-4">
+                <div class="flex gap-2">
+                    <input type="text" id="gif-search-input" placeholder="Ex: feliz, animado..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 focus:ring-2 focus:ring-violet-500 text-sm">
+                    <button id="gif-search-btn" class="bg-violet-600 text-white p-2.5 rounded-xl flex items-center justify-center">
                         <span class="material-symbols-outlined">search</span>
                     </button>
                 </div>
                 <div id="gif-results" class="grid grid-cols-2 gap-2 h-80 overflow-y-auto pr-2 custom-scrollbar">
-                    <p class="col-span-2 text-center text-slate-400 py-10">Busque algo acima...</p>
+                    <p class="col-span-2 text-center text-slate-400 py-10 text-sm">Busque algo acima...</p>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-    </script>
+
+    <script>lucide.createIcons();</script>
     <script type="module" src="postagem.js"></script>
 </body>
 </html>

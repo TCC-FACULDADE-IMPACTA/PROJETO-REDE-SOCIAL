@@ -1,37 +1,31 @@
 import api from "../../services/api.js";
 
-// --- ESTADO DA APLICAÇÃO ---
 let editPostId = null; 
 let selectedGifUrl = ""; 
-const BASE_URL = "http://127.0.0.1:8000"; // Certifique-se que esta URL está correta
+const BASE_URL = "http://127.0.0.1:8000"; 
 const MEU_USUARIO_ID = localStorage.getItem("usuario_id");
 
-// Mapeamento para as reações
 const REACOES_MAPA = {
     'curtir': '👍', 'amei': '❤️', 'forca': '💪', 
     'haha': '😆', 'uau': '😮', 'triste': '😢', 'grr': '😠'
 };
 
-// --- ELEMENTOS DO DOM ---
 const feedElement = document.getElementById('feed');
 const inputElement = document.getElementById('feeling-input');
 const sendBtn = document.getElementById('send-btn');
 const formTitle = document.getElementById('form-title');
 const cancelBtn = document.getElementById('cancel-edit-btn');
 
-// Preview do GIF
 const gifPreviewContainer = document.getElementById('gif-preview-container');
 const gifPreviewImg = document.getElementById('gif-preview-img');
 const removeGifBtn = document.getElementById('remove-gif-btn');
 
-// Modal de GIFs
 const gifModal = document.getElementById('gif-modal');
 const gifSearchInput = document.getElementById('gif-search-input');
 const gifSearchBtn = document.getElementById('gif-search-btn');
 const gifResults = document.getElementById('gif-results');
 const closeGifModal = document.getElementById('close-modal');
-
-// --- 1. GESTÃO DE ESTADO DO FORMULÁRIO ---
+const gifTriggerBtn = document.getElementById('gif-trigger-btn');
 
 function limparEstadoForm() {
     editPostId = null;
@@ -40,6 +34,7 @@ function limparEstadoForm() {
     gifPreviewContainer.classList.add('hidden');
     formTitle.innerText = "Compartilhe um sentimento";
     sendBtn.innerText = "Enviar";
+    sendBtn.className = "envia text-white px-8 py-2.5 rounded-full font-bold shadow-lg active:scale-95 transition-all text-sm";
     if (cancelBtn) cancelBtn.classList.add('hidden');
 }
 
@@ -51,17 +46,14 @@ if (cancelBtn) {
     };
 }
 
-// --- 2. BUSCA DE GIFS ---
 const toggleModal = () => gifModal.classList.toggle('hidden');
-document.querySelectorAll('button').forEach(btn => {
-    if (btn.innerText.includes("Adicionar GIF")) btn.onclick = toggleModal;
-});
+if (gifTriggerBtn) gifTriggerBtn.onclick = toggleModal;
 if (closeGifModal) closeGifModal.onclick = toggleModal;
 
 async function buscarGifs() {
     const termo = gifSearchInput.value.trim();
     if (!termo) return;
-    gifResults.innerHTML = '<p class="col-span-2 text-center py-10">Buscando...</p>';
+    gifResults.innerHTML = '<p class="col-span-2 text-center py-10 text-sm text-slate-400">Buscando...</p>';
     try {
         const response = await api.get(`/api/buscar_gifs/?q=${termo}`);
         const gifs = response.data.resultados;
@@ -79,7 +71,7 @@ async function buscarGifs() {
             gifResults.appendChild(img);
         });
     } catch (error) {
-        gifResults.innerHTML = '<p class="col-span-2 text-center text-red-500">Erro ao buscar GIFs.</p>';
+        gifResults.innerHTML = '<p class="col-span-2 text-center text-red-500 text-sm">Erro ao buscar GIFs.</p>';
     }
 }
 gifSearchBtn.onclick = buscarGifs;
@@ -90,8 +82,6 @@ if (removeGifBtn) {
         gifPreviewContainer.classList.add('hidden');
     };
 }
-
-// --- 3. CRUD ---
 
 window.prepararEdicao = (id, texto, gif) => {
     editPostId = id; 
@@ -106,7 +96,7 @@ window.prepararEdicao = (id, texto, gif) => {
     }
     formTitle.innerText = "Editando seu sentimento";
     sendBtn.innerText = "Salvar Alterações";
-    sendBtn.classList.replace('signature-gradient', 'bg-emerald-500'); 
+    sendBtn.className = "bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-2.5 rounded-full font-bold shadow-lg active:scale-95 transition-all text-sm";
     if (cancelBtn) cancelBtn.classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     inputElement.focus();
@@ -142,13 +132,8 @@ sendBtn.addEventListener('click', async (e) => {
 
 window.handleReacaoClique = async (postId, tipo) => {
     try {
-        const response = await api.post(`/api/gerenciar_reacao/${postId}/`, {
-            reacao_tipo: tipo 
-        });
-
-        if (response.status === 200 || response.status === 201) {
-            carregarFeed(); // Atualiza a tela para mostrar o novo emoji e contagem
-        }
+        const response = await api.post(`/api/gerenciar_reacao/${postId}/`, { reacao_tipo: tipo });
+        if (response.status === 200 || response.status === 201) carregarFeed();
     } catch (error) {
         console.error("Erro ao salvar reação:", error.response?.data || error);
     }
@@ -156,33 +141,17 @@ window.handleReacaoClique = async (postId, tipo) => {
 
 window.handleLikeSimples = (postId) => window.handleReacaoClique(postId, 'curtir');
 
-// --- 4. RENDERIZAÇÃO ---
-
 async function carregarFeed() {
     try {
         const response = await api.get('/api/listar_postagens/');
         const posts = response.data;
-
-        console.log("Posts carregados:", posts); // Debug: Veja se os posts estão chegando
-        console.log("Meu ID no LocalStorage:", MEU_USUARIO_ID); // Debug: Veja o seu ID
-
         if (posts.length > 0) {
-
             const meuPost = posts.find(p => p.usuario == MEU_USUARIO_ID);
-            
             if (meuPost && meuPost.usuario_foto) {
                 const imgTopo = document.getElementById('user-photo-header');
-                if (imgTopo) {
-                    imgTopo.src = meuPost.usuario_foto;
-                    console.log("Foto do topo atualizada para:", meuPost.usuario_foto);
-                } else {
-                    console.error("Elemento 'user-photo-header' não encontrado no HTML!");
-                }
-            } else {
-                console.warn("Nenhum post seu foi encontrado para extrair a foto.");
+                if (imgTopo) imgTopo.src = meuPost.usuario_foto;
             }
         }
-
         renderPosts(posts);
     } catch (error) {
         console.error("Erro ao carregar feed:", error);
@@ -191,22 +160,18 @@ async function carregarFeed() {
 
 function renderPosts(posts) {
     feedElement.innerHTML = '';
-
     posts.forEach(post => {
         const ehMeuPost = String(post.usuario) === String(MEU_USUARIO_ID);
-        
-        // 2. Lógica de Reações (Estilo Facebook)
         const resumo = post.reacoes_resumo || {};
         const reacoesAtivas = Object.keys(resumo).filter(tipo => resumo[tipo] > 0);
         const total = post.total_reacoes || 0;
 
-        // 3. Tratamento da Foto
         const fotoAutor = post.usuario_foto 
             ? (post.usuario_foto.startsWith('http') ? post.usuario_foto : `${BASE_URL}${post.usuario_foto}`)
             : 'https://via.placeholder.com/100';
 
         const article = document.createElement('article');
-        article.className = 'bg-white rounded-2xl p-6 shadow-md mb-6 border border-slate-50 post-card';
+        article.className = 'bg-white rounded-2xl p-6 border border-[var(--color-surface-container)] shadow-sm mb-6 post-card';
         article.setAttribute('data-id', post.id);
 
         article.innerHTML = `
@@ -214,46 +179,36 @@ function renderPosts(posts) {
                 <div class="flex items-center gap-3">
                     <img src="${fotoAutor}" class="w-10 h-10 rounded-full object-cover border border-slate-200">
                     <div>
-                        <h3 class="font-bold text-slate-900">${post.usuario_nome}</h3>
-                        <p class="text-xs text-slate-400">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                        <h3 class="font-bold text-slate-900 text-sm">${post.usuario_nome}</h3>
+                        <p class="text-xs text-slate-400 font-medium">${new Date(post.data_criacao).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                     </div>
                 </div>
-
-                <!-- BOTÕES DE EDITAR/DELETAR -->
                 ${ehMeuPost ? `
-                    <div class="flex gap-1" style="pointer-events: auto;">
-                        <button onclick="prepararEdicao(${post.id}, '${post.texto_sentimento.replace(/'/g, "\\'")}', '${post.gif_url || ''}')" 
-                                class="text-violet-500 hover:bg-violet-50 p-2 rounded-full transition-colors flex items-center justify-center">
-                            <span class="material-symbols-outlined">edit</span>
+                    <div class="flex gap-1">
+                        <button onclick="prepararEdicao(${post.id}, '${post.texto_sentimento.replace(/'/g, "\\'")}', '${post.gif_url || ''}')" class="text-violet-500 hover:bg-violet-50 p-2 rounded-full transition-colors flex items-center justify-center w-9 h-9">
+                            <span class="material-symbols-outlined text-xl">edit</span>
                         </button>
-                        <button onclick="deletarPost(${post.id})" 
-                                class="text-red-400 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center justify-center">
-                            <span class="material-symbols-outlined">delete</span>
+                        <button onclick="deletarPost(${post.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-full transition-colors flex items-center justify-center w-9 h-9">
+                            <span class="material-symbols-outlined text-xl">delete</span>
                         </button>
                     </div>
                 ` : ''}
             </div>
-
-            <p class="text-slate-800 text-lg mb-4">${post.texto_sentimento}</p>
-            ${post.gif_url ? `<img src="${post.gif_url}" class="w-full h-auto rounded-xl mb-4">` : ''}
-
-            <!-- PILHA DE EMOJIS (FACEBOOK STYLE) -->
+            <p class="text-slate-800 text-base mb-4 font-medium leading-relaxed">${post.texto_sentimento}</p>
+            ${post.gif_url ? `<img src="${post.gif_url}" class="w-full h-auto block rounded-xl mb-4 border border-slate-100">` : ''}
             ${total > 0 ? `
                 <div class="flex items-center gap-2 mb-3 px-1">
                     <div class="flex -space-x-1.5">
                         ${reacoesAtivas.map((tipo, idx) => `
-                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white ring-2 ring-white text-sm" 
-                                  style="z-index: ${10 - idx}">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white ring-2 ring-white text-xs shadow-sm" style="z-index: ${10 - idx}">
                                 ${REACOES_MAPA[tipo] || '👍'}
                             </span>
                         `).join('')}
                     </div>
-                    <span class="text-sm text-slate-500 font-bold">${total}</span>
+                    <span class="text-xs text-slate-500 font-bold">${total}</span>
                 </div>
             ` : ''}
-
-            <!-- AÇÕES DE REAÇÃO -->
-            <div class="post-actions border-t border-slate-100 pt-3">
+            <div class="post-actions border-t border-slate-100 pt-2">
                 <div class="reaction-container relative inline-flex">
                     <div class="reaction-menu">
                         ${Object.keys(REACOES_MAPA).map(tipo => `
@@ -262,11 +217,11 @@ function renderPosts(posts) {
                             </button>
                         `).join('')}
                     </div>
-                    <button type="button" class="btn-like ${post.minha_reacao ? 'active' : ''} flex items-center gap-2" onclick="handleLikeSimples(${post.id})">
-                        <div class="like-icon-wrapper">
-                            ${post.minha_reacao ? `<span class="text-xl">${post.minha_reacao}</span>` : `<span class="material-symbols-outlined">favorite</span>`}
+                    <button type="button" class="btn-like ${post.minha_reacao ? 'active' : ''} flex items-center gap-2 !py-2 !px-4 rounded-full transition-all" onclick="handleLikeSimples(${post.id})">
+                        <div class="like-icon-wrapper flex items-center justify-center">
+                            ${post.minha_reacao ? `<span class="text-lg">${post.minha_reacao}</span>` : `<span class="material-symbols-outlined text-xl">favorite</span>`}
                         </div>
-                        <span class="text-sm font-bold">${post.minha_reacao ? 'Reagido' : 'Reagir'}</span>
+                        <span class="text-xs font-bold">${post.minha_reacao ? 'Reagido' : 'Reagir'}</span>
                     </button>
                 </div>
             </div>
