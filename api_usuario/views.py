@@ -80,7 +80,7 @@ def efetuar_login(request):
         payload = {
             'usuario_id': credencial.usuario.id,
             'username': credencial.usuario.username,
-            'exp': datetime.now(timezone.utc) + timedelta(hours=24), #TOKEN EXPIRA EM 24 HORAS
+            'exp': datetime.now(timezone.utc) + timedelta(hours=1), #TOKEN EXPIRA EM 1 HORA
             'iat': datetime.now(timezone.utc)
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
@@ -134,7 +134,7 @@ def upload_foto(request):
         serializer.save()
         return Response({
             'mensagem': 'Foto de perfil atualizada com sucesso!',
-            'foto_url': usuario.foto.url # Útil para o React atualizar a imagem
+            'foto_url': usuario.foto.url 
         }, status=status.HTTP_200_OK)
     
     # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: FORMATO DE IMAGEM INVÁLIDO)
@@ -150,28 +150,24 @@ def atualizar_perfil(request):
     print(f"data: {request.data}")
     print(f"files: {request.FILES}")
 
-    # O SEGREDO ESTÁ AQUI:
-    # O seu decorador 'token_obrigatorio' provavelmente anexa o usuário ao request.
-    # Verifique se o seu decorador usa 'request.user' ou 'request.user_autenticado'
+    
     usuario = getattr(request, 'user_autenticado', None)
 
     if not usuario:
         return Response({"erro": "Usuário não identificado"}, status=401)
 
-    # 1. Pegamos a foto e a bio do request manualmente
+    # Pegamos a foto e a bio do request manualmente
     nova_bio = request.data.get('bio')
     nova_foto = request.FILES.get('foto')
 
-    # 2. Atualizamos os campos no objeto
+    # Atualizamos os campos no objeto
     if nova_bio:
         usuario.bio = nova_bio
     
     if nova_foto:
-        usuario.foto = nova_foto # O Django cuida de mover para media/perfil/ aqui
+        usuario.foto = nova_foto
 
-    # 3. SALVAMENTO MANUAL NO BANCO (Isso garante a persistência)
     usuario.save()
 
-    # 4. Retornamos os dados usando o Serializer para garantir o formato correto
     serializer = PerfilSerializer(usuario, context={'request': request})
     return Response(serializer.data, status=200)
