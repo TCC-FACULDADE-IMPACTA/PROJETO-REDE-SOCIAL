@@ -1,9 +1,15 @@
 import api from "../../services/api.js";
 
+// VERIFICAÇÃO DE SEGURANÇA
+if (!localStorage.getItem("usuario_id")) {
+    window.location.href = "../../index.html";
+}
+
 const REACOES_MAPA = {
     'curtir': '👍', 'amei': '❤️', 'forca': '💪', 
     'haha': '😆', 'uau': '😮', 'triste': '😢', 'grr': '😠'
 };
+
 
 const BASE_URL = "http://127.0.0.1:8000";
 
@@ -184,3 +190,13 @@ function toggleModal(show) {
         modal.classList.add('hidden');
     }
 }
+
+// --- SISTEMA DE LOGOUT ---
+window.executarLogout = () => {
+    if (!confirm("Deseja realmente sair da sua conta?")) return;
+
+    localStorage.removeItem("usuario_id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("access_token"); // Remova todas as chaves de login
+    window.location.href = "../../index.html"; 
+};

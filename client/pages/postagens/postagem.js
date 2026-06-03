@@ -1,5 +1,10 @@
 import api from "../../services/api.js";
 
+// VERIFICAÇÃO DE SEGURANÇA
+if (!localStorage.getItem("usuario_id")) {
+    window.location.href = "../../index.html";
+}
+
 let editPostId = null; 
 let selectedGifUrl = ""; 
 const BASE_URL = "http://127.0.0.1:8000"; 
@@ -231,3 +236,13 @@ function renderPosts(posts) {
 }
 
 carregarFeed();
+
+// --- SISTEMA DE LOGOUT ---
+window.executarLogout = () => {
+    if (!confirm("Deseja realmente sair da sua conta?")) return;
+
+    localStorage.removeItem("usuario_id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("access_token"); // Remova todas as chaves de login
+    window.location.href = "../../index.html"; 
+};
