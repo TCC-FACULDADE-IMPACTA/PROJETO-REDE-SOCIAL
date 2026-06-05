@@ -1,0 +1,345 @@
+/* ================================= */
+/* RESET */
+/* ================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* ================================= */
+/* BODY */
+/* ================================= */
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at 20% 30%, #b06cf7, transparent 40%),
+    radial-gradient(circle at 80% 70%, #4fd1ff, transparent 40%),
+    linear-gradient(135deg, #5f2eea, #3a86ff);
+}
+
+/* ================================= */
+/* WRAPPER */
+/* ================================= */
+
+.page-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ================================= */
+/* LOGO */
+/* ================================= */
+
+.logo-top {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.logo-desktop {
+  width: 300px;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.25));
+  transition: transform 0.3s ease;
+}
+
+.logo-mobile {
+  display: none;
+  width: 90px;
+}
+
+/* ================================= */
+/* CARD */
+/* ================================= */
+
+.signup-container {
+  margin-top: 80px;
+  width: 420px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* ================================= */
+/* TITULO */
+/* ================================= */
+
+.logo {
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(90deg,#a855f7,#3b82f6,#22d3ee);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+/* ================================= */
+/* INPUTS */
+/* ================================= */
+
+.input-group {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 13px;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* INPUTS LADO A LADO */
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row .input-group {
+  flex: 1;
+}
+
+/* ================================= */
+/* PASSWORD */
+/* ================================= */
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* ============================= */
+/* FORÇA DA SENHA */
+/* ============================= */
+
+.password-strength{
+  width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+#strengthBar{
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+#strengthText{
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ================================= */
+/* ERROS */
+/* ================================= */
+
+.input-error {
+  border-color: #ff4d4d !important;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+
+0% { transform: translateX(0); }
+25% { transform: translateX(-4px); }
+50% { transform: translateX(4px); }
+75% { transform: translateX(-4px); }
+100% { transform: translateX(0); }
+
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 13px;
+  margin-top: 5px;
+  display: none;
+}
+
+/* ================================= */
+/* BOTÃO */
+/* ================================= */
+
+.signup-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(90deg,#7c3aed,#3b82f6,#22d3ee);
+  margin-top: 10px;
+  transition: all 0.2s ease;
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59,130,246,0.35);
+}
+
+/* ================================= */
+/* LINKS */
+/* ================================= */
+
+.signup {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.signup a {
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup a:hover {
+  text-decoration: underline;
+}
+
+/* ================================= */
+/* RESPONSIVO */
+/* ================================= */
+
+/* TABLETS */
+
+@media (max-width: 768px) {
+
+  body {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .logo-top {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    margin-bottom: 15px;
+  }
+
+  .logo-desktop {
+    display: none;
+  }
+
+  .logo-mobile {
+    display: block;
+    margin: auto;
+  }
+
+  .signup-container {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 10px;
+  }
+
+}
+
+/* CELULARES */
+
+@media (max-width: 480px) {
+
+  .signup-container {
+    width: 100%;
+    padding: 28px 22px;
+    border-radius: 22px;
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-group input {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .signup-btn {
+    padding: 16px;
+  }
+
+  .logo {
+    font-size: 34px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+}
+
+/* CELULARES PEQUENOS */
+
+@media (max-width: 360px) {
+
+  .signup-container {
+    padding: 24px 18px;
+  }
+
+  .logo {
+    font-size: 30px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+}

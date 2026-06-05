@@ -1,0 +1,185 @@
+from deep_translator import GoogleTranslator
+import requests
+from django.conf import settings
+from rest_framework.decorators import api_view
+from utils.autenticacao import token_obrigatorio
+from .serializers import CriarPostSentimentoSerializer, ListarPostSentimentoSerializer, REACOES_MAPA
+from rest_framework.response import Response
+from rest_framework import status
+from .models import PostSentimento, Reacao
+
+
+# FLUXO: BUSCAR GIFS
+@api_view(['GET'])
+@token_obrigatorio
+def buscar_gifs(request):
+    """ Fluxo: BUSCAR GIFS NO GIPHY (PUBLICO OU AUTENTICADO) """
+
+    # Verifica se o termo de busca foi fornecido
+    query_pt = request.query_params.get('q', '')  # Termo de busca para o GIF
+    if not query_pt:
+        return Response({'erro': 'O parâmetro "q" é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    try:
+        # Traduz o termo de busca de português para inglês
+        query_en = GoogleTranslator(source='pt', target='en').translate(query_pt)
+        
+        # Configurações da API do Giphy
+        api_key = settings.GIPHY_API_KEY
+        limit = 12 # Mostra 12 GIFs por vez
+
+        url = f"https://api.giphy.com/v1/gifs/search?api_key={api_key}&q={query_en}&limit={limit}&rating=g"
+        response = requests.get(url)
+        response.raise_for_status()  # Verifica se a resposta foi bem-sucedida
+        data = response.json()
+
+        # Simplifica os dados dos GIFs
+        gifs_simplificados = []
+        for gif in data.get('data', []):
+            images = gif.get('images', {})
+            fixed_height = images.get('fixed_height', {})
+            url_gif = fixed_height.get('url')
+
+            gifs_simplificados.append({
+                'id': gif['id'],
+                'titulo': gif['title'],
+                'url': url_gif
+            })
+
+        return Response({
+            'termo_original': query_pt,   # O que o usuário digitou ("ex: animada")
+            'termo_traduzido': query_en,  # O que o Giphy realmente buscou ("ex: excited")
+            'resultados': gifs_simplificados
+        }, status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        return Response({'erro': f'Erro ao buscar GIFs: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)   
+    except requests.HTTPError as e:
+        return Response({'erro': f'Erro na API do Giphy: {e.response.status_code}'}, status=e.response.status_code)
+    except requests.RequestException as e:
+        return Response({'erro': f'Não foi possível conectar ao serviço de Giphy: {str(e)}'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    
+
+
+# FLUXO: CRIAR POSTAGEM
+@api_view(['POST'])
+@token_obrigatorio
+def criar_post(request):
+    """ Fluxo: CRIAR POST COM GIF """
+
+    usuario = request.user_autenticado  # Obtém o usuário autenticado do decorador
+    serializer = CriarPostSentimentoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(usuario=usuario)  # Associa o post ao usuário autenticado 
+        return Response({
+            'mensagem': 'Seu sentimento foi criado com sucesso.',
+            'post': serializer.data
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# FLUXO: DELETAR POSTAGEM
+@api_view(['DELETE'])
+@token_obrigatorio
+def deletar_postagem(request, post_id):
+    """ Fluxo: DELETAR POST """
+
+    usuario = request.user_autenticado
+    # Verifica se a postagem existe e pertence ao usuário
+    try:
+        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario) # Garante que o usuário só possa deletar suas próprias postagens
+        postagem.delete()
+        return Response({'mensagem': 'Postagem deletada com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+# FLUXO: LISTAR POSTAGENS
+@api_view(['GET'])
+@token_obrigatorio
+def listar_postagens(request):
+    """ Fluxo: LISTAR POSTS NO FEED """
+
+    usuario = request.user_autenticado
+    # Obtém todas as postagens
+    posts = PostSentimento.objects.all().order_by('-data_criacao')
+    serializer = ListarPostSentimentoSerializer(posts, many=True, context={'request': request})
+    if not posts.exists():
+        return Response({'mensagem': 'Nenhuma postagem encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+# FLUXO: LISTAR POSTAGENS DO USUÁRIO
+@api_view(['GET'])
+@token_obrigatorio
+def listar_postagens_usuario(request):
+    """ Fluxo: LISTAR POSTAGENS DO USUÁRIO """
+
+    usuario = request.user_autenticado
+    postagens_banco = PostSentimento.objects.filter(usuario=usuario).order_by('-data_criacao')
+    if not postagens_banco.exists():
+        return Response({'mensagem': 'Nenhuma postagem encontrada para este usuário.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # SERIALIZA AS POSTAGENS ENCONTRADAS
+    serializer = ListarPostSentimentoSerializer(postagens_banco, many=True, context={'request': request})
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# FLUXO: ATUALIZAR POSTAGEM
+@api_view(['PUT', 'PATCH'])
+@token_obrigatorio
+def atualizar_postagem(request, post_id):
+    """ Fluxo: ATUALIZAR POST """
+
+    usuario = request.user_autenticado
+
+    # Verifica se a postagem existe e pertence ao usuário
+    try:
+        postagem = PostSentimento.objects.get(id=post_id, usuario=usuario) # Garante que o usuário só possa atualizar suas próprias postagens
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada ou não possui permissão.'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ListarPostSentimentoSerializer(postagem, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            'mensagem': 'Postagem atualizada com sucesso.',
+            'post': serializer.data
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# FLUXO: GERENCIAR REAÇÃO
+@api_view(['POST'])
+@token_obrigatorio
+def gerenciar_reacao(request, post_id):
+    usuario = request.user_autenticado
+    tipo_escolhido = request.data.get('reacao_tipo') # Front-end envia 'curtir', 'amei', etc.
+    
+    emoji_icon = REACOES_MAPA.get(tipo_escolhido)
+    if not emoji_icon:
+        return Response({'erro': 'Reação inválida'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        post = PostSentimento.objects.get(id=post_id)
+        reacao_existente = Reacao.objects.filter(usuario=usuario, postagem=post).first()
+
+        if reacao_existente:
+            if reacao_existente.reacao_tipo == emoji_icon:
+                reacao_existente.delete()
+                return Response({'status': 'removida'}, status=status.HTTP_200_OK)
+            else:
+                reacao_existente.reacao_tipo = emoji_icon
+                reacao_existente.save()
+                return Response({'status': 'atualizada'}, status=status.HTTP_200_OK)
+        
+        Reacao.objects.create(usuario=usuario, postagem=post, reacao_tipo=emoji_icon)
+        return Response({'status': 'criada'}, status=status.HTTP_201_CREATED)
+
+    except PostSentimento.DoesNotExist:
+        return Response({'erro': 'Postagem não encontrada'}, status=404)

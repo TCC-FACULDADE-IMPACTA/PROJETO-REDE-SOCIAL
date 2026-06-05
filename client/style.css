@@ -1,0 +1,364 @@
+/* ================================= */
+/* RESET */
+/* ================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* ================================= */
+/* BODY */
+/* ================================= */
+body {
+  min-height: 100dvh;
+  background:
+  radial-gradient(circle at 20% 30%, #b06cf7, transparent 40%),
+  radial-gradient(circle at 80% 70%, #4fd1ff, transparent 40%),
+  linear-gradient(135deg, #5f2eea, #3a86ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* ================================= */
+/* CONTAINER PRINCIPAL */
+/* ================================= */
+.page-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  transition: all 0.4s ease;
+}
+
+/* ================================= */
+/* LADO ESQUERDO (PREVIEW) */
+/* ================================= */
+.preview-side {
+  flex: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.preview-side h1 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.preview-side p {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.preview-side img {
+  width: 5000px;
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+/* ================================= */
+/* ÁREA DO LOGIN (ENVOLVE LOGO + CARD) */
+/* ================================= */
+.login-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+
+/* ================================= */
+/* LOGO MOBILE (FORA DO CARD) */
+/* ================================= */
+.mobile-logo {
+  width: 200px;
+  margin-bottom: 30px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+/* ================================= */
+/* CARD LOGIN */
+/* ================================= */
+.login-container {
+  width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+/* ================================= */
+/* TITULO */
+/* ================================= */
+.logo {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #a855f7, #3b82f6, #22d3ee);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+/* ================================= */
+/* INPUTS */
+/* ================================= */
+.input-group {
+  position: relative;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+/* INPUT BASE */
+.input-group input {
+  width: 100%;
+  padding: 18px 10px 8px 10px;
+  border: none;
+  border-bottom: 2px solid #e5e7eb;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* LABEL FLUTUANTE */
+.input-group label {
+  position: absolute;
+  left: 10px;
+  top: 18px;
+  color: #9ca3af;
+  font-size: 15px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* LINHA ANIMADA */
+.input-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, #7c3aed, #3b82f6);
+  transition: width 0.3s ease;
+}
+
+.input-group input:focus {
+  border-bottom-color: transparent;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+  top: -6px;
+  font-size: 12px;
+  color: #7c3aed;
+}
+
+.input-group input:focus ~ .input-line,
+.input-group input:not(:placeholder-shown) ~ .input-line {
+  width: 100%;
+}
+
+.input-group.error input {
+  border-bottom-color: #ff4d4d;
+}
+
+.input-group.error label {
+  color: #ff4d4d;
+}
+
+.input-group.error .input-line {
+  background: #ff4d4d;
+  width: 100%;
+}
+
+/* Animação leve */
+.input-group.error {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ================================= */
+/* BOTÃO LOGIN */
+/* ================================= */
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(90deg, #7c3aed, #3b82f6, #22d3ee);
+  margin-top: 10px;
+  transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+}
+
+/* ================================= */
+/* SOCIAL LOGIN */
+/* ================================= */
+.social-login {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.social-btn img {
+  width: 20px;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ================================= */
+/* LINKS */
+/* ================================= */
+.forgot {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #7c3aed;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.divider {
+  margin: 24px 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.signup {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.signup a {
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ================================= */
+/* PASSWORD */
+/* ================================= */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding: 18px 45px 8px 10px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 13px;
+  margin-top: 5px;
+  display: none;
+}
+
+/* ================================= */
+/* RESPONSIVO */
+/* ================================= */
+@media (max-width: 992px) {
+
+  body {
+    align-items: flex-start;
+    padding-top: 0px;
+  }
+
+  .page-wrapper {
+    margin-top: -30px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Preview desaparece suavemente */
+  .preview-side {
+    opacity: 0;
+    transform: translateX(-40px);
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  /* Logo aparece suavemente */
+  .mobile-logo {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 420px;
+  }
+}
