@@ -12,4 +12,6 @@ urlpatterns = [
     path('api/perfil/', views.ver_perfil, name='ver_perfil'),
     path('api/upload_foto/', views.upload_foto, name='upload_foto'),
     path('api/atualizar_perfil/', views.atualizar_perfil, name='atualizar_perfil'),
+    path('api/solicitar_magic_link/', views.solicitar_magic_link, name='solicitar_magic_link'),
+    path('api/verificar_magic_link/', views.verificar_magic_link, name='verificar_magic_link'),
 ]
