@@ -178,12 +178,3 @@ EXTERNAL_SERVICES = {
     }
 }
 
-# CONFIGURAÇÃO DE E-MAIL VIA SMTP DO GOOGLE
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = '270210.gui@gmail.com' # Seu e-mail real
-EMAIL_HOST_PASSWORD = 'gceoggcibdogyljq'      # Sua Senha de App de 16 letras
-DEFAULT_FROM_EMAIL = 'Mood App <270210.gui@gmail.com>'
