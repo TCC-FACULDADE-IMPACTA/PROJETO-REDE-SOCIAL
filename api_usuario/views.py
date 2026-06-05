@@ -6,17 +6,19 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, Credencial
 from .serializers import CadastroSerializer, LoginSerializer, PerfilSerializer, FotoPerfilSerializer, EditarPerfilSerializer
 from django.conf import settings
-from datetime import datetime, timedelta, timezone
-import jwt
+from django.core.mail import send_mail
 from rest_framework.parsers import MultiPartParser, FormParser
 from utils.autenticacao import token_obrigatorio
+import jwt
+
+# CORREÇÃO DOS IMPORTS AQUI:
+from datetime import datetime, timedelta, timezone 
+from django.utils import timezone as django_timezone  # <--- Importado com um apelido exclusivo
 
 # SE O MÉTODO FOR POST, PROCESSA O CADASTRO
 @api_view(['POST'])
 def cadastrar_usuario(request):
     """ Fluxo: CADASTRAR USUÁRIO """
-
-    # O SERIALIZER VALIDA OS DADOS
     serializer = CadastroSerializer(data=request.data)
     
     if serializer.is_valid():
@@ -40,23 +42,18 @@ def cadastrar_usuario(request):
             return Response(
                 {'mensagem': 'Usuário cadastrado com sucesso! Bem-vindo.'}, 
                 status=status.HTTP_201_CREATED
-            )
-        # SE HOUVER QUALQUER ERRO DURANTE O PROCESSO, RETORNA UM ERRO INTERNO    
+            )   
         except Exception as e:
             print("Erro ao cadastrar usuário:", {str(e)})
             return Response({'erro': f'Erro interno: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-    # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: EMAIL INVÁLIDO)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 # FLUXO DE LOGIN
 @api_view(['POST'])
 def efetuar_login(request):
     """ Fluxo: EFETUAR LOGIN """
-
-    # VALIDA OS DADOS DO LOGIN
     serializer = LoginSerializer(data=request.data)
 
     if not serializer.is_valid():
@@ -66,7 +63,6 @@ def efetuar_login(request):
     identificador = serializer.validated_data['login']
     senha = serializer.validated_data['senha']
 
-    # SISTEMA BUSCA USUÁRIO
     credencial = Credencial.objects.filter(email=identificador).first()
     
     if not credencial:
@@ -80,7 +76,7 @@ def efetuar_login(request):
         payload = {
             'usuario_id': credencial.usuario.id,
             'username': credencial.usuario.username,
-            'exp': datetime.now(timezone.utc) + timedelta(hours=1), #TOKEN EXPIRA EM 1 HORA
+            'exp': datetime.now(timezone.utc) + timedelta(hours=1), # Mantido o 'timezone' do Python para o JWT
             'iat': datetime.now(timezone.utc)
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
@@ -91,7 +87,6 @@ def efetuar_login(request):
             'user_id': credencial.usuario.id
         }, status=status.HTTP_200_OK)
 
-    # FALHA NA AUTENTICAÇÃO
     return Response(
         {'erro': 'Credenciais inválidas.'}, 
         status=status.HTTP_401_UNAUTHORIZED
@@ -102,14 +97,12 @@ def efetuar_login(request):
 @token_obrigatorio
 def ver_perfil(request):
     """ Fluxo: VER PERFIL DO USUÁRIO """
-
     usuario = getattr(request, 'user_autenticado', None)
 
     if not usuario:
         return Response({"erro": "Usuário não identificado"}, status=401)
 
     usuario_atualizado = Usuario.objects.get(id=usuario.id)
-    # SE O USUÁRIO FOR ENCONTRADO, RETORNA OS DADOS DO PERFIL
     serializer = PerfilSerializer(usuario_atualizado, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -120,14 +113,11 @@ def ver_perfil(request):
 @parser_classes([MultiPartParser, FormParser])
 def upload_foto(request):
     """ Fluxo: UPLOAD DE FOTO DE PERFIL """
-
     usuario = request.user_autenticado
 
-    # VERIFICA SE O ARQUIVO 'foto' ESTÁ PRESENTE NOS FILES ENVIADOS
     if 'foto' not in request.FILES:
         return Response({'erro': 'Chave "foto" não encontrada nos arquivos enviados.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # CRIAÇÃO DO SERIALIZER QUE VAI VALIDAR E SALVAR A FOTO
     serializer = FotoPerfilSerializer(usuario, data=request.data, partial=True)
     
     if serializer.is_valid():
@@ -137,7 +127,6 @@ def upload_foto(request):
             'foto_url': usuario.foto.url 
         }, status=status.HTTP_200_OK)
     
-    # SE A VALIDAÇÃO FALHAR, RETORNA OS ERROS ESPECÍFICOS (EX: FORMATO DE IMAGEM INVÁLIDO)
     print(f"ERROS DO SERIALIZER: {serializer.errors}")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -147,20 +136,14 @@ def upload_foto(request):
 @parser_classes([MultiPartParser, FormParser])
 def atualizar_perfil(request):
     """ Fluxo: ATUALIZAR PERFIL DO USUÁRIO """
-    print(f"data: {request.data}")
-    print(f"files: {request.FILES}")
-
-    
     usuario = getattr(request, 'user_autenticado', None)
 
     if not usuario:
         return Response({"erro": "Usuário não identificado"}, status=401)
 
-    # Pegamos a foto e a bio do request manualmente
     nova_bio = request.data.get('bio')
     nova_foto = request.FILES.get('foto')
 
-    # Atualizamos os campos no objeto
     if nova_bio:
         usuario.bio = nova_bio
     
@@ -171,3 +154,68 @@ def atualizar_perfil(request):
 
     serializer = PerfilSerializer(usuario, context={'request': request})
     return Response(serializer.data, status=200)
+
+# FLUXO: SOLICITAR MAGIC LINK
+@api_view(['POST'])
+def solicitar_magic_link(request):
+    """ Gera o token UUID e dispara o e-mail real para o usuário """
+    email_informado = request.data.get('email')
+    if not email_informado:
+        return Response({'erro': 'O e-mail é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        credencial = Credencial.objects.get(email=email_informado)
+        token_uuid = credencial.gerar_magic_link_token()
+        
+        url_front = "http://localhost:5173"
+        link_acesso = f"{url_front}/pages/esqueceu_senha/autenticar.html?token={token_uuid}"
+
+        send_mail(
+            'Seu Link de Acesso - Mood',
+            f'Olá, {credencial.usuario.nome}!\n\nClique no link abaixo para entrar direto na sua conta sem senha:\n{link_acesso}\n\nEste link é de uso único e expira em 15 minutos.',
+            settings.DEFAULT_FROM_EMAIL,
+            [credencial.email],
+            fail_silently=False,
+        )
+
+        return Response({'mensagem': 'Link de acesso enviado com sucesso para o seu e-mail!'}, status=status.HTTP_200_OK)
+
+    except Credencial.DoesNotExist:
+        return Response({'mensagem': 'Se o e-mail estiver cadastrado, um link foi enviado.'}, status=status.HTTP_200_OK)
+
+# FLUXO: VERIFICAR MAGIC LINK
+@api_view(['POST'])
+def verificar_magic_link(request):
+    """ Valida o UUID da URL, limpa o banco e entrega o Token JWT padrão """
+    token_recebido = request.data.get('token')
+    if not token_recebido:
+        return Response({'erro': 'Token inválido ou ausente.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # CORREÇÃO AQUI: Alterado de 'timezone.now()' para 'django_timezone.now()'
+        credencial = Credencial.objects.get(
+            magic_link_token=token_recebido,
+            magic_link_expiracao__gt=django_timezone.now()
+        )
+
+        usuario = credencial.usuario
+
+        # Mantido o objeto 'timezone' do Python para gerar o timestamp correto do JWT
+        payload = {
+            'usuario_id': usuario.id,
+            'username': usuario.username,
+            'exp': datetime.now(timezone.utc) + timedelta(hours=24), # Aumentei para 24h para você testar com calma
+            'iat': datetime.now(timezone.utc)
+        }
+        token_jwt = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+        credencial.limpar_magic_link_token()
+
+        return Response({
+            'mensagem': 'Login efetuado via Link Mágico!',
+            'token': token_jwt,
+            'user_id': usuario.id
+        }, status=status.HTTP_200_OK)
+
+    except Credencial.DoesNotExist:
+        return Response({'erro': 'Este link é inválido, já foi utilizado ou expirou.'}, status=status.HTTP_400_BAD_REQUEST)

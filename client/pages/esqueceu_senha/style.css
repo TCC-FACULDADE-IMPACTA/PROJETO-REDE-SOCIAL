@@ -137,9 +137,37 @@ body {
 }
 
 
+#strengthBar{
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+#strengthText{
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
 /* ================================= */
 /* ERROS */
 /* ================================= */
+
+.input-error {
+  border-color: #ff4d4d !important;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+
+0% { transform: translateX(0); }
+25% { transform: translateX(-4px); }
+50% { transform: translateX(4px); }
+75% { transform: translateX(-4px); }
+100% { transform: translateX(0); }
+
+}
 
 .error-message {
   color: #ff4d4d;
