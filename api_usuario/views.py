@@ -10,10 +10,8 @@ from django.core.mail import send_mail
 from rest_framework.parsers import MultiPartParser, FormParser
 from utils.autenticacao import token_obrigatorio
 import jwt
-
-# CORREÇÃO DOS IMPORTS AQUI:
 from datetime import datetime, timedelta, timezone 
-from django.utils import timezone as django_timezone  # <--- Importado com um apelido exclusivo
+from django.utils import timezone as django_timezone
 
 # SE O MÉTODO FOR POST, PROCESSA O CADASTRO
 @api_view(['POST'])
@@ -76,7 +74,7 @@ def efetuar_login(request):
         payload = {
             'usuario_id': credencial.usuario.id,
             'username': credencial.usuario.username,
-            'exp': datetime.now(timezone.utc) + timedelta(hours=1), # Mantido o 'timezone' do Python para o JWT
+            'exp': datetime.now(timezone.utc) + timedelta(hours=1),
             'iat': datetime.now(timezone.utc)
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
@@ -192,7 +190,6 @@ def verificar_magic_link(request):
         return Response({'erro': 'Token inválido ou ausente.'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # CORREÇÃO AQUI: Alterado de 'timezone.now()' para 'django_timezone.now()'
         credencial = Credencial.objects.get(
             magic_link_token=token_recebido,
             magic_link_expiracao__gt=django_timezone.now()
@@ -200,11 +197,10 @@ def verificar_magic_link(request):
 
         usuario = credencial.usuario
 
-        # Mantido o objeto 'timezone' do Python para gerar o timestamp correto do JWT
         payload = {
             'usuario_id': usuario.id,
             'username': usuario.username,
-            'exp': datetime.now(timezone.utc) + timedelta(hours=24), # Aumentei para 24h para você testar com calma
+            'exp': datetime.now(timezone.utc) + timedelta(hours=1),
             'iat': datetime.now(timezone.utc)
         }
         token_jwt = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
