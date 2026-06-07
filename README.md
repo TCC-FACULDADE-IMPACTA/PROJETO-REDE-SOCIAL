@@ -71,6 +71,9 @@ A rede social foi construída com o seguinte stack tecnológico:
 * JWT
 * Pytest
 * emoji
+* SMTPlib
+* deep_translator
+  
 
 ---
 
@@ -186,17 +189,23 @@ O modelo de dados é baseado em um grafo social, focado em interações:
 ├── setup                 # configurações da aplicação em Geral
 └── requirements.txt      # Bibliotecas necessárias
 ```
-## 8.🤝 Diagramas de atividades
+## 8.🤝 Diagramas da rede social
 Diagramas que demonstram comportamentos dinâmicos do sistema e os processos de negócios.
 
-Diagrama de Atividade Cadastro/Login:
+Diagrama de caso de uso:
 
-<img width="1508" height="654" alt="CADASTRO_DO_SISTEMA drawio" src="https://github.com/user-attachments/assets/cbde008c-2b72-484d-969d-28955521b9ee" />
+<img width="2047" height="489" alt="caso_De_Uso (1)" src="https://github.com/user-attachments/assets/b3818977-f284-4108-9556-92c30e156f59" />
 
 
-Diagrama de Atividade Postagem de mensagens:
+Diagrama de Entidade Relacionamento:
 
-<img width="1380" height="752" alt="funcionalidade2DA" src="https://github.com/user-attachments/assets/2101daf2-be0c-4783-b4e8-8d3feca139d1" />
+<img width="943" height="1055" alt="DER drawio" src="https://github.com/user-attachments/assets/bd68406a-4d2d-4752-9366-6af2114ada61" />
+
+Diagrama de Classes:
+
+<img width="664" height="983" alt="diagramaClasse" src="https://github.com/user-attachments/assets/ca512923-6fc4-4243-8c9f-ef2d0eafcee7" />
+
+
 
 
 ## 9.📜 Licença
