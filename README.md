@@ -156,6 +156,8 @@ https://aistudio.google.com/api-keys
 | **PATCH** | `/api/atualizar_perfil/<int:user_id>/` | Atualiza o perfil do usuário (Requer Id do usuario) |
 | **POST** | `/api/gerenciar_reacao/<int:post_id>/` | Cria e salva reações na postagem do usuario |
 | **GET** | `/api/api/listar_postagens_usuario/` | Retorna todas as postagens somente do usuario logado |
+| **POST** | `api/solicitar_magic_link/` | Retorna um Magic token de acesso|
+| **POST** | `api/verificar_magic_link/` | Verifica/autentica o magic token gerado|
 
 ---
 
