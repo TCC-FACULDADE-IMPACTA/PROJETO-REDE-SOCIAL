@@ -164,7 +164,8 @@ https://aistudio.google.com/api-keys
 ## 6.📊 Estrutura do Banco de Dados
 O modelo de dados é baseado em um grafo social, focado em interações:
 
-<img width="943" height="1055" alt="DER (2)" src="https://github.com/user-attachments/assets/709de392-4072-4274-8793-4edce05842ca" />
+<img width="2436" height="1105" alt="banco" src="https://github.com/user-attachments/assets/01fb2eeb-9e83-4fb6-8cc5-6adf9193aa80" />
+
 
 
 ---
