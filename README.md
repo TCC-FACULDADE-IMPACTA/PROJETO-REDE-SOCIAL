@@ -163,8 +163,138 @@ https://aistudio.google.com/api-keys
 
 ## 6.📊 Estrutura do Banco de Dados
 O modelo de dados é baseado em um grafo social, focado em interações:
+``` mermaid
+erDiagram
+    %% ==========================================
+    %% TABELAS CUSTOMIZADAS DO APP (LADO DIREITO)
+    %% ==========================================
+    usuarios {
+        bigint id PK
+        varchar nome
+        varchar foto
+        varchar username UK
+        date nascimento
+        text bio
+    }
 
-<img width="2436" height="1105" alt="banco" src="https://github.com/user-attachments/assets/01fb2eeb-9e83-4fb6-8cc5-6adf9193aa80" />
+    credenciais {
+        bigint id PK
+        varchar email UK
+        varchar senha
+        bigint id_usuarios FK
+        uuid magic_link_token
+        timestamp magic_link_expiracao
+    }
+
+    postagens {
+        bigint id PK
+        varchar gif_url
+        text texto_sentimento
+        timestamp data_criacao
+        bigint id_usuarios FK
+    }
+
+    reacoes {
+        bigint id PK
+        varchar reacao_tipo
+        bigint postagem_id FK
+        bigint usuario_id FK
+    }
+
+    %% ==========================================
+    %% TABELAS NATIVAS DO DJANGO (LADO ESQUERDO)
+    %% ==========================================
+    auth_user {
+        integer id PK
+        timestamptz last_login
+        boolean is_superuser
+        varchar username UK
+        varchar first_name
+        varchar last_name
+        varchar email
+        boolean is_staff
+        boolean is_active
+        timestamptz date_joined
+    }
+
+    auth_group {
+        integer id PK
+        varchar name UK
+    }
+
+    auth_permission {
+        integer id PK
+        varchar name
+        integer content_type_id FK
+        varchar codename
+    }
+
+    auth_user_groups {
+        bigint id PK
+        integer user_id FK
+        integer group_id FK
+    }
+
+    auth_group_permissions {
+        bigint id PK
+        integer group_id FK
+        integer permission_id FK
+    }
+
+    auth_user_user_permissions {
+        bigint id PK
+        integer user_id FK
+        integer permission_id FK
+    }
+
+    django_content_type {
+        integer id PK
+        varchar app_label
+        varchar model
+    }
+
+    django_admin_log {
+        integer id PK
+        timestamptz action_time
+        text object_id
+        varchar object_repr
+        smallint action_flag
+        text change_message
+        integer content_type_id FK
+        integer user_id FK
+    }
+
+    django_session {
+        varchar session_key PK
+        text session_data
+        timestamptz expire_date
+    }
+
+    django_migrations {
+        bigint id PK
+        varchar app
+        varchar name
+        timestamptz applied
+    }
+
+    %% ==========================================
+    %% RELACIONAMENTOS DO MODELO
+    %% ==========================================
+    usuarios ||--o| credenciais : possui
+    usuarios ||--o{ postagens : publica
+    usuarios ||--o{ reacoes : interage
+    postagens ||--o{ reacoes : recebe
+
+    auth_user ||--o{ auth_user_groups : vincula
+    auth_group ||--o{ auth_user_groups : contem
+    auth_group ||--o{ auth_group_permissions : possui
+    auth_permission ||--o{ auth_group_permissions : concede
+    auth_user ||--o{ auth_user_user_permissions : possui
+    auth_permission ||--o{ auth_user_user_permissions : concede
+    django_content_type ||--o{ auth_permission : define
+    django_content_type ||--o{ django_admin_log : categoriza
+    auth_user ||--o{ django_admin_log : opera
+```
 
 
 
