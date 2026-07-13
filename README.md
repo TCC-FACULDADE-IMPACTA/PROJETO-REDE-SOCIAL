@@ -106,11 +106,6 @@ Ela pode ser gerada através do:
  https://developers.giphy.com/dashboard/
 ```
 
-Coloque o GEMINI_API_KEY no `.env.local` dentro da pasta client, para sua chave Gemini API que poder ser gerada através do:
-```bash
-https://aistudio.google.com/api-keys
-```
-
 
 4.  **Instale as dependências:**
     ```bash
